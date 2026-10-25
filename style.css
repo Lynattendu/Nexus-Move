@@ -1,1 +1,2207 @@
+/* =========================================================
+   NEXUS MOVE
+   STYLE.CSS
+   ========================================================= */
 
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+html {
+  background: #020712;
+}
+
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(0, 174, 255, 0.14),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      #07111f 0%,
+      #030812 48%,
+      #01040a 100%
+    );
+
+  color: #ffffff;
+
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+  --bg-dark: #020712;
+  --bg-card: rgba(9, 22, 40, 0.86);
+  --bg-card-soft: rgba(13, 31, 53, 0.72);
+
+  --blue: #1b8cff;
+  --cyan: #00eaff;
+  --cyan-soft: #72f6ff;
+
+  --white: #ffffff;
+  --text-soft: #a7bad0;
+  --text-muted: #70849b;
+
+  --green: #35e58d;
+  --orange: #ffab45;
+  --red: #ff4f6d;
+
+  --border:
+    rgba(111, 221, 255, 0.18);
+
+  --shadow-blue:
+    0 0 25px rgba(0, 196, 255, 0.24);
+
+  --radius-xl: 30px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+
+/* =========================================================
+   APPLICATION
+========================================================= */
+
+.app {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+
+/* =========================================================
+   ÉCRANS
+========================================================= */
+
+.screen {
+
+  display: none;
+
+  width: 100%;
+  min-height: 100dvh;
+
+  padding:
+    calc(env(safe-area-inset-top) + 22px)
+    20px
+    calc(env(safe-area-inset-bottom) + 28px);
+
+}
+
+.screen.active {
+  display: block;
+}
+
+
+/* =========================================================
+   ACCUEIL
+========================================================= */
+
+#homeScreen {
+
+  max-width: 850px;
+  margin: 0 auto;
+
+  padding-top:
+    calc(env(safe-area-inset-top) + 40px);
+
+}
+
+
+/* =========================================================
+   HEADER ACCUEIL
+========================================================= */
+
+.home-header {
+  margin-bottom: 38px;
+}
+
+.logo-zone {
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+}
+
+.logo-icon {
+
+  width: 64px;
+  height: 64px;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 34px;
+  font-weight: 900;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00eaff,
+      #0c78ff 58%,
+      #1541d8
+    );
+
+  box-shadow:
+    0 0 25px rgba(0, 217, 255, 0.35),
+    inset 0 0 20px rgba(255, 255, 255, 0.12);
+
+}
+
+.app-kicker,
+.screen-kicker,
+.section-kicker {
+
+  display: block;
+
+  color: var(--cyan);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2.2px;
+
+  margin-bottom: 5px;
+
+}
+
+.home-header h1 {
+
+  font-size: clamp(30px, 7vw, 48px);
+
+  letter-spacing: -1.4px;
+
+  line-height: 1;
+
+}
+
+.home-subtitle {
+
+  margin-top: 17px;
+
+  color: var(--text-soft);
+
+  font-size: 15px;
+
+}
+
+
+/* =========================================================
+   MENU ACCUEIL
+========================================================= */
+
+.home-menu {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+
+}
+
+.home-card {
+
+  width: 100%;
+
+  min-height: 98px;
+
+  padding: 18px 18px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  text-align: left;
+
+  color: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-lg);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(13, 30, 51, 0.95),
+      rgba(4, 13, 25, 0.94)
+    );
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.28);
+
+  transition:
+    transform 0.15s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+.home-card:active {
+  transform: scale(0.98);
+}
+
+.home-card.primary {
+
+  border-color:
+    rgba(0, 221, 255, 0.45);
+
+  box-shadow:
+    var(--shadow-blue);
+
+}
+
+.home-card-icon {
+
+  width: 58px;
+  height: 58px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  font-size: 28px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0, 220, 255, 0.16),
+      rgba(31, 101, 255, 0.18)
+    );
+
+  border:
+    1px solid rgba(0, 221, 255, 0.22);
+
+}
+
+.home-card-content {
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+}
+
+.home-card-content strong {
+
+  font-size: 20px;
+  font-weight: 800;
+
+}
+
+.home-card-content small {
+
+  font-size: 13px;
+
+  color: var(--text-soft);
+
+}
+
+.home-card-arrow {
+
+  font-size: 34px;
+
+  font-weight: 200;
+
+  color: var(--cyan-soft);
+
+}
+
+
+/* =========================================================
+   STATS ACCUEIL
+========================================================= */
+
+.home-stats {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-top: 28px;
+
+}
+
+.mini-stat {
+
+  min-height: 92px;
+
+  padding: 15px 8px;
+
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background:
+    rgba(7, 19, 34, 0.74);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+.mini-stat strong {
+
+  font-size: 20px;
+
+  color: var(--cyan-soft);
+
+}
+
+.mini-stat span {
+
+  margin-top: 5px;
+
+  font-size: 11px;
+
+  color: var(--text-muted);
+
+}
+
+
+/* =========================================================
+   HEADER ÉCRANS
+========================================================= */
+
+.screen-header {
+
+  max-width: 850px;
+
+  margin: 0 auto 25px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+}
+
+.back-btn {
+
+  width: 50px;
+  height: 50px;
+
+  flex-shrink: 0;
+
+  border-radius: 16px;
+
+  font-size: 34px;
+
+  line-height: 1;
+
+  color: white;
+
+  background:
+    rgba(15, 35, 59, 0.85);
+
+  border:
+    1px solid var(--border);
+
+}
+
+.screen-header h2 {
+
+  font-size: 27px;
+
+}
+
+
+/* =========================================================
+   CHRONOMÈTRE
+========================================================= */
+
+.chrono-content {
+
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  min-height:
+    calc(100dvh - 150px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.chrono-status {
+
+  margin-bottom: 18px;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  color: var(--cyan);
+
+  background:
+    rgba(0, 217, 255, 0.08);
+
+  border:
+    1px solid rgba(0, 217, 255, 0.22);
+
+}
+
+.chrono-display {
+
+  width: 100%;
+
+  text-align: center;
+
+  font-size:
+    clamp(66px, 16vw, 130px);
+
+  font-weight: 800;
+
+  letter-spacing: -5px;
+
+  line-height: 1;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  text-shadow:
+    0 0 22px rgba(0, 219, 255, 0.22);
+
+}
+
+.chrono-actions {
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 12px;
+
+  margin-top: 42px;
+
+}
+
+
+/* =========================================================
+   BOUTONS D'ACTION
+========================================================= */
+
+.action-btn {
+
+  min-height: 58px;
+
+  padding: 14px;
+
+  border-radius: 17px;
+
+  font-weight: 800;
+
+  font-size: 15px;
+
+  color: white;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.2s ease;
+
+}
+
+.action-btn:active {
+  transform: scale(0.97);
+}
+
+.action-btn:disabled {
+
+  opacity: 0.27;
+
+  cursor: default;
+
+}
+
+.start-btn {
+
+  background:
+    linear-gradient(
+      135deg,
+      #00c8ff,
+      #1978ff
+    );
+
+  box-shadow:
+    0 8px 25px rgba(0, 177, 255, 0.25);
+
+}
+
+.pause-btn {
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff8456,
+      #ff496a
+    );
+
+}
+
+.resume-btn {
+
+  background:
+    linear-gradient(
+      135deg,
+      #20d88b,
+      #00a66d
+    );
+
+}
+
+.reset-btn {
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.1);
+
+}
+
+
+/* =========================================================
+   CONFIGURATION CIRCUIT
+========================================================= */
+
+.setup-content {
+
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  padding-bottom: 40px;
+
+}
+
+.setting-card {
+
+  margin-bottom: 14px;
+
+  padding: 18px;
+
+  border-radius: var(--radius-lg);
+
+  background:
+    var(--bg-card);
+
+  border:
+    1px solid var(--border);
+
+}
+
+.setting-card > label {
+
+  display: block;
+
+  margin-bottom: 14px;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  color: var(--text-soft);
+
+}
+
+.number-control {
+
+  display: grid;
+
+  grid-template-columns:
+    54px 1fr 54px;
+
+  gap: 10px;
+
+  align-items: center;
+
+}
+
+.number-control button {
+
+  width: 54px;
+  height: 54px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(0, 204, 255, 0.12);
+
+  border:
+    1px solid rgba(0, 221, 255, 0.22);
+
+  color: var(--cyan);
+
+  font-size: 30px;
+
+}
+
+.number-control input {
+
+  width: 100%;
+
+  height: 54px;
+
+  border: none;
+
+  border-radius: 15px;
+
+  text-align: center;
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  color: white;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+}
+
+
+/* =========================================================
+   INPUT TEMPS
+========================================================= */
+
+.time-input-row {
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+.time-input-row input {
+
+  flex: 1;
+
+  min-width: 0;
+
+  height: 54px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 15px;
+
+  color: white;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+}
+
+.time-input-row span {
+
+  color: var(--text-soft);
+
+  font-size: 14px;
+
+}
+
+
+/* =========================================================
+   EXERCICES CONFIGURATION
+========================================================= */
+
+.exercise-section {
+
+  margin-top: 28px;
+
+}
+
+.section-title-row {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 15px;
+
+}
+
+.section-title-row h3 {
+
+  font-size: 23px;
+
+}
+
+.exercise-count {
+
+  min-width: 42px;
+  height: 42px;
+
+  padding: 0 12px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--cyan);
+
+  font-weight: 900;
+
+  background:
+    rgba(0, 220, 255, 0.09);
+
+  border:
+    1px solid rgba(0, 220, 255, 0.18);
+
+}
+
+.exercise-list {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+
+}
+
+.exercise-item {
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(10, 27, 46, 0.82);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+.exercise-item-number {
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  font-weight: 900;
+
+  color: var(--cyan);
+
+  background:
+    rgba(0, 220, 255, 0.1);
+
+}
+
+.exercise-item-content {
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+.exercise-item-content strong {
+
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 16px;
+
+}
+
+.exercise-item-content span {
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+
+}
+
+.exercise-delete {
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 12px;
+
+  color: var(--red);
+
+  background:
+    rgba(255, 79, 109, 0.08);
+
+  font-size: 20px;
+
+}
+
+
+/* =========================================================
+   AJOUT EXERCICE
+========================================================= */
+
+.add-exercise-btn {
+
+  width: 100%;
+
+  min-height: 59px;
+
+  margin-top: 14px;
+
+  border-radius: 18px;
+
+  color: var(--cyan);
+
+  font-weight: 800;
+
+  background:
+    rgba(0, 211, 255, 0.07);
+
+  border:
+    1px dashed rgba(0, 221, 255, 0.3);
+
+}
+
+.big-start-btn {
+
+  width: 100%;
+
+  min-height: 66px;
+
+  margin-top: 28px;
+
+  padding: 16px;
+
+  border-radius: 20px;
+
+  font-size: 16px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.5px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00cfff,
+      #0a75ff 58%,
+      #3150e9
+    );
+
+  box-shadow:
+    0 12px 35px rgba(0, 185, 255, 0.27);
+
+}
+
+
+/* =========================================================
+   MODALE EXERCICE
+========================================================= */
+
+.modal {
+
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 100;
+
+}
+
+.modal.open {
+  display: block;
+}
+
+.modal-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    rgba(0, 4, 12, 0.76);
+
+  backdrop-filter:
+    blur(9px);
+
+}
+
+.modal-panel {
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 0;
+
+  transform:
+    translateX(-50%);
+
+  width: 100%;
+
+  max-width: 650px;
+
+  padding:
+    24px
+    20px
+    calc(env(safe-area-inset-bottom) + 25px);
+
+  border-radius:
+    28px
+    28px
+    0
+    0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #0a1b2f,
+      #030a14
+    );
+
+  border-top:
+    1px solid rgba(0, 219, 255, 0.18);
+
+  box-shadow:
+    0 -20px 60px rgba(0, 0, 0, 0.45);
+
+}
+
+.modal-header {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 25px;
+
+}
+
+.modal-header h3 {
+
+  font-size: 24px;
+
+}
+
+.modal-close {
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 15px;
+
+  color: white;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  font-size: 28px;
+
+}
+
+
+/* =========================================================
+   CHAMPS
+========================================================= */
+
+.field-label {
+
+  display: block;
+
+  margin-bottom: 18px;
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+}
+
+.field-label > input {
+
+  width: 100%;
+
+  height: 56px;
+
+  margin-top: 8px;
+
+  padding: 0 15px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 16px;
+
+  color: white;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  font-size: 17px;
+
+}
+
+.field-label input::placeholder {
+
+  color: #64788f;
+
+}
+
+
+/* =========================================================
+   CHOIX TEMPS / RÉPÉTITIONS
+========================================================= */
+
+.exercise-type-selector {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 22px;
+
+}
+
+.type-btn {
+
+  min-height: 54px;
+
+  border-radius: 16px;
+
+  color: var(--text-soft);
+
+  font-weight: 800;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+.type-btn.active {
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0a93ff,
+      #1759ef
+    );
+
+  border-color:
+    rgba(0, 225, 255, 0.38);
+
+  box-shadow:
+    0 0 18px rgba(0, 183, 255, 0.17);
+
+}
+
+.exercise-option {
+  display: none;
+}
+
+.exercise-option.active {
+  display: block;
+}
+
+.modal-save-btn {
+
+  width: 100%;
+
+  min-height: 59px;
+
+  margin-top: 8px;
+
+  border-radius: 18px;
+
+  color: white;
+
+  font-weight: 900;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00c8ff,
+      #176aff
+    );
+
+}
+
+
+/* =========================================================
+   ÉCRAN ENTRAÎNEMENT
+========================================================= */
+
+.workout-screen {
+
+  padding:
+    calc(env(safe-area-inset-top) + 18px)
+    18px
+    calc(env(safe-area-inset-bottom) + 20px);
+
+}
+
+.workout-header {
+
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.workout-header span {
+
+  color: var(--cyan);
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+}
+
+.workout-close-btn {
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 15px;
+
+  color: white;
+
+  font-size: 27px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+}
+
+.workout-main {
+
+  max-width: 850px;
+
+  min-height:
+    calc(100dvh - 110px);
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+}
+
+.phase-label {
+
+  padding: 8px 18px;
+
+  border-radius: 999px;
+
+  color: var(--cyan);
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  background:
+    rgba(0, 217, 255, 0.09);
+
+  border:
+    1px solid rgba(0, 217, 255, 0.2);
+
+}
+
+.workout-exercise-name {
+
+  width: 100%;
+
+  margin-top: 20px;
+
+  min-height: 42px;
+
+  font-size:
+    clamp(25px, 7vw, 42px);
+
+  font-weight: 900;
+
+  line-height: 1.08;
+
+}
+
+.workout-timer {
+
+  margin-top: 22px;
+
+  font-size:
+    clamp(88px, 24vw, 180px);
+
+  font-weight: 900;
+
+  letter-spacing: -7px;
+
+  line-height: 0.95;
+
+  font-variant-numeric:
+    tabular-nums;
+
+  text-shadow:
+    0 0 25px rgba(0, 223, 255, 0.25);
+
+}
+
+
+/* =========================================================
+   RÉPÉTITIONS
+========================================================= */
+
+.reps-display {
+
+  margin-top: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+}
+
+.reps-display[hidden] {
+  display: none;
+}
+
+.reps-display strong {
+
+  font-size:
+    clamp(90px, 25vw, 170px);
+
+  line-height: 0.95;
+
+  color: white;
+
+}
+
+.reps-display span {
+
+  margin-top: 12px;
+
+  color: var(--cyan);
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+}
+
+
+/* =========================================================
+   PROGRESSION ENTRAÎNEMENT
+========================================================= */
+
+.workout-progress {
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 12px;
+
+  margin-top: 32px;
+
+}
+
+.progress-box {
+
+  padding: 17px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(7, 24, 41, 0.78);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+.progress-box span {
+
+  display: block;
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+
+}
+
+.progress-box strong {
+
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 20px;
+
+  color: var(--cyan-soft);
+
+}
+
+.workout-totals {
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 10px;
+
+  margin-top: 10px;
+
+}
+
+.workout-totals > div {
+
+  padding: 13px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+}
+
+.workout-totals strong {
+
+  display: block;
+
+  color: white;
+
+  font-size: 19px;
+
+}
+
+.workout-totals span {
+
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+}
+
+
+/* =========================================================
+   BOUTON TERMINÉ RÉPÉTITIONS
+========================================================= */
+
+.finish-reps-btn {
+
+  width: 100%;
+
+  min-height: 70px;
+
+  margin-top: 24px;
+
+  border-radius: 20px;
+
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  background:
+    linear-gradient(
+      135deg,
+      #20dc91,
+      #00a76d
+    );
+
+  box-shadow:
+    0 10px 30px rgba(0, 215, 135, 0.18);
+
+}
+
+.finish-reps-btn[hidden] {
+  display: none;
+}
+
+
+/* =========================================================
+   COMMANDES ENTRAÎNEMENT
+========================================================= */
+
+.workout-controls {
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 10px;
+
+  margin-top: 22px;
+
+}
+
+
+/* =========================================================
+   ÉTATS VISUELS
+========================================================= */
+
+.workout-screen.phase-work {
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0, 217, 255, 0.11),
+      transparent 55%
+    );
+
+}
+
+.workout-screen.phase-rest {
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 164, 67, 0.1),
+      transparent 55%
+    );
+
+}
+
+.workout-screen.phase-round-rest {
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(44, 116, 255, 0.12),
+      transparent 55%
+    );
+
+}
+
+.workout-screen.phase-paused {
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 71, 104, 0.09),
+      transparent 55%
+    );
+
+}
+
+
+/* =========================================================
+   FIN CIRCUIT
+========================================================= */
+
+.complete-content {
+
+  max-width: 750px;
+
+  min-height:
+    calc(100dvh - 80px);
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+}
+
+.complete-icon {
+
+  width: 94px;
+  height: 94px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 24px;
+
+  border-radius: 50%;
+
+  font-size: 45px;
+
+  font-weight: 900;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #21e492,
+      #009d71
+    );
+
+  box-shadow:
+    0 0 35px rgba(0, 226, 142, 0.24);
+
+}
+
+.complete-content h2 {
+
+  margin-top: 5px;
+
+  font-size: 42px;
+
+}
+
+.complete-content > p {
+
+  max-width: 430px;
+
+  margin-top: 11px;
+
+  color: var(--text-soft);
+
+}
+
+.complete-stats {
+
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 9px;
+
+  margin-top: 30px;
+
+}
+
+.complete-stats > div {
+
+  padding: 20px 10px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(8, 24, 40, 0.78);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+.complete-stats strong {
+
+  display: block;
+
+  font-size: 22px;
+
+  color: var(--cyan-soft);
+
+}
+
+.complete-stats span {
+
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 11px;
+
+  color: var(--text-muted);
+
+}
+
+
+/* =========================================================
+   HISTORIQUE
+========================================================= */
+
+.history-content {
+
+  max-width: 850px;
+
+  margin: 0 auto;
+
+}
+
+.history-summary {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 9px;
+
+  margin-bottom: 24px;
+
+}
+
+.history-summary > div {
+
+  padding: 17px 8px;
+
+  text-align: center;
+
+  border-radius: 18px;
+
+  background:
+    var(--bg-card-soft);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+.history-summary strong {
+
+  display: block;
+
+  font-size: 21px;
+
+  color: var(--cyan-soft);
+
+}
+
+.history-summary span {
+
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+}
+
+.history-list {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+}
+
+.history-item {
+
+  padding: 18px;
+
+  border-radius: 19px;
+
+  background:
+    rgba(8, 24, 41, 0.8);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
+
+}
+
+.history-item-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 12px;
+
+}
+
+.history-item-header strong {
+
+  font-size: 16px;
+
+}
+
+.history-date {
+
+  color: var(--text-muted);
+
+  font-size: 12px;
+
+}
+
+.history-item-details {
+
+  margin-top: 12px;
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+
+  line-height: 1.55;
+
+}
+
+.empty-history {
+
+  padding: 55px 20px;
+
+  text-align: center;
+
+  border-radius: 22px;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  border:
+    1px dashed rgba(255, 255, 255, 0.09);
+
+}
+
+.empty-history-icon {
+
+  font-size: 44px;
+
+  color: var(--cyan);
+
+}
+
+.empty-history h3 {
+
+  margin-top: 13px;
+
+  font-size: 20px;
+
+}
+
+.empty-history p {
+
+  margin-top: 7px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+}
+
+.clear-history-btn {
+
+  width: 100%;
+
+  min-height: 54px;
+
+  margin-top: 22px;
+
+  border-radius: 17px;
+
+  color: var(--red);
+
+  font-weight: 800;
+
+  background:
+    rgba(255, 79, 109, 0.06);
+
+  border:
+    1px solid rgba(255, 79, 109, 0.14);
+
+}
+
+
+/* =========================================================
+   FLASH VISUEL
+========================================================= */
+
+.phase-flash {
+
+  pointer-events: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 999;
+
+  opacity: 0;
+
+  background:
+    rgba(0, 225, 255, 0.45);
+
+}
+
+.phase-flash.flash {
+
+  animation:
+    phaseFlashAnimation 0.45s ease;
+
+}
+
+@keyframes phaseFlashAnimation {
+
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0.48;
+  }
+
+  100% {
+    opacity: 0;
+  }
+
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes pulseGlow {
+
+  0% {
+    box-shadow:
+      0 0 0 rgba(0, 218, 255, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 0 32px rgba(0, 218, 255, 0.25);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 rgba(0, 218, 255, 0);
+  }
+
+}
+
+.running-glow {
+
+  animation:
+    pulseGlow
+    1.8s
+    infinite;
+
+}
+
+
+/* =========================================================
+   SUPPRESSION FLÈCHES INPUT NUMBER
+========================================================= */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+
+  -webkit-appearance: none;
+
+  margin: 0;
+
+}
+
+input[type="number"] {
+
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+}
+
+
+/* =========================================================
+   TABLETTES
+========================================================= */
+
+@media (min-width: 700px) {
+
+  .screen {
+
+    padding-left: 36px;
+    padding-right: 36px;
+
+  }
+
+  .home-card {
+
+    min-height: 112px;
+
+    padding-left: 24px;
+    padding-right: 24px;
+
+  }
+
+  .home-card-icon {
+
+    width: 66px;
+    height: 66px;
+
+    font-size: 31px;
+
+  }
+
+  .home-card-content strong {
+
+    font-size: 23px;
+
+  }
+
+  .home-card-content small {
+
+    font-size: 14px;
+
+  }
+
+  .chrono-actions,
+  .workout-controls {
+
+    max-width: 620px;
+
+  }
+
+  .workout-progress,
+  .workout-totals {
+
+    max-width: 620px;
+
+  }
+
+  .finish-reps-btn {
+
+    max-width: 620px;
+
+  }
+
+}
+
+
+/* =========================================================
+   PETITS ÉCRANS
+========================================================= */
+
+@media (max-width: 390px) {
+
+  .screen {
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+  }
+
+  .logo-icon {
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 17px;
+
+  }
+
+  .home-header h1 {
+
+    font-size: 28px;
+
+  }
+
+  .home-card {
+
+    min-height: 88px;
+
+  }
+
+  .home-card-icon {
+
+    width: 50px;
+    height: 50px;
+
+  }
+
+  .home-card-content strong {
+
+    font-size: 18px;
+
+  }
+
+  .chrono-display {
+
+    font-size: 62px;
+
+  }
+
+  .workout-timer {
+
+    font-size: 78px;
+
+  }
+
+}
+
+
+/* =========================================================
+   MODE PAYSAGE
+========================================================= */
+
+@media
+  (orientation: landscape)
+  and (max-height: 600px) {
+
+  .workout-main {
+
+    justify-content: flex-start;
+
+    padding-top: 10px;
+
+  }
+
+  .workout-exercise-name {
+
+    margin-top: 10px;
+
+  }
+
+  .workout-timer {
+
+    margin-top: 10px;
+
+    font-size: 72px;
+
+  }
+
+  .workout-progress {
+
+    margin-top: 15px;
+
+  }
+
+  .workout-controls {
+
+    margin-top: 14px;
+
+  }
+
+}
