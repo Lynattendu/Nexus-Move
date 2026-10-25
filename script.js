@@ -625,7 +625,10 @@ el("saveChronoBtn").addEventListener("click", function () {
     el("chronoActivityName")
       .value
       .trim();
-
+const distance =
+  Number(
+    el("chronoDistance").value
+  );
 
   if (!name) {
 
