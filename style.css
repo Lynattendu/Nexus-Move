@@ -2205,3 +2205,226 @@ input[type="number"] {
   }
 
 }
+
+/* =========================================================
+   PROGRESSION
+========================================================= */
+
+.progress-section {
+
+  margin-bottom: 32px;
+
+}
+
+.progress-list {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+}
+
+.progress-empty {
+
+  padding: 22px;
+
+  border-radius: 18px;
+
+  color: var(--text-muted);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  text-align: center;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  border:
+    1px dashed rgba(255, 255, 255, 0.09);
+
+}
+
+
+/* CARTE PROGRESSION */
+
+.progress-card {
+
+  padding: 20px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(12, 31, 52, 0.92),
+      rgba(4, 13, 25, 0.95)
+    );
+
+  border:
+    1px solid rgba(0, 220, 255, 0.15);
+
+}
+
+.progress-card-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 15px;
+
+}
+
+.progress-card-title strong {
+
+  display: block;
+
+  font-size: 19px;
+
+}
+
+.progress-card-title span {
+
+  display: block;
+
+  margin-top: 5px;
+
+  color: var(--text-soft);
+
+  font-size: 13px;
+
+}
+
+
+/* TENDANCE */
+
+.progress-trend {
+
+  flex-shrink: 0;
+
+  padding: 8px 12px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.4px;
+
+}
+
+.progress-trend.up {
+
+  color: #53f0a4;
+
+  background:
+    rgba(53, 229, 141, 0.1);
+
+  border:
+    1px solid rgba(53, 229, 141, 0.22);
+
+}
+
+.progress-trend.stable {
+
+  color: #70e9ff;
+
+  background:
+    rgba(0, 220, 255, 0.09);
+
+  border:
+    1px solid rgba(0, 220, 255, 0.2);
+
+}
+
+.progress-trend.down {
+
+  color: #ff9a66;
+
+  background:
+    rgba(255, 141, 82, 0.09);
+
+  border:
+    1px solid rgba(255, 141, 82, 0.2);
+
+}
+
+
+/* DONNÉES */
+
+.progress-values {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 9px;
+
+  margin-top: 18px;
+
+}
+
+.progress-value {
+
+  padding: 14px 8px;
+
+  text-align: center;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+}
+
+.progress-value strong {
+
+  display: block;
+
+  font-size: 17px;
+
+  color: white;
+
+}
+
+.progress-value span {
+
+  display: block;
+
+  margin-top: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+}
+
+
+/* POURCENTAGE */
+
+.progress-evolution {
+
+  margin-top: 14px;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+
+  text-align: center;
+
+}
+
+.progress-evolution strong {
+
+  color: var(--cyan-soft);
+
+}
+
+
+
+
