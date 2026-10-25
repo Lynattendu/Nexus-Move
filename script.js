@@ -638,7 +638,17 @@ const distance =
 
     return;
   }
+if (
+  !distance ||
+  distance <= 0
+) {
 
+  alert(
+    "Entre la distance parcourue en mètres."
+  );
+
+  return;
+}
 
   const milliseconds =
     getCurrentChronoTime();
