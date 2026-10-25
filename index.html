@@ -252,7 +252,7 @@
 
 
 
-    <!-- =====================================================
+   <!-- =====================================================
      CHRONOMÈTRE
 ====================================================== -->
 
@@ -293,15 +293,13 @@
 
     <div
       class="setting-card"
-      style="width:100%; margin-bottom:28px;"
+      style="width:100%; margin-bottom:0;"
     >
 
       <label for="chronoActivityName">
         Nom de l'activité
       </label>
 
-
-</div>
       <input
         id="chronoActivityName"
         type="text"
@@ -322,6 +320,8 @@
     </div>
 
 
+    <!-- ÉTAT -->
+
     <div
       class="chrono-status"
       id="chronoStatus"
@@ -330,6 +330,8 @@
     </div>
 
 
+    <!-- TEMPS -->
+
     <div
       class="chrono-display"
       id="chronoDisplay"
@@ -337,6 +339,8 @@
       00:00.0
     </div>
 
+
+    <!-- COMMANDES -->
 
     <div class="chrono-actions">
 
@@ -378,38 +382,45 @@
       </button>
 
     </div>
-<!-- DISTANCE -->
 
-<div
-  class="setting-card"
-  style="width:100%; margin-bottom:28px;"
->
 
-  <label for="chronoDistance">
-    Distance
-  </label>
+    <!-- DISTANCE -->
 
-  <div class="time-input-row">
-
-    <input
-      id="chronoDistance"
-      type="number"
-      min="0"
-      step="1"
-      placeholder="Ex : 2000"
+    <div
+      class="setting-card"
+      style="width:100%; margin:0;"
     >
 
-    <span>
-      mètres
-    </span>
+      <label for="chronoDistance">
+        Distance
+      </label>
 
-  </div>
+      <div class="time-input-row">
+
+        <input
+          id="chronoDistance"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="Ex : 2000"
+        >
+
+        <span>
+          mètres
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ENREGISTRER -->
 
     <button
       class="big-start-btn"
       id="saveChronoBtn"
       type="button"
-      style="margin-top:20px;"
+      style="margin-top:4px;"
     >
       ENREGISTRER L'ACTIVITÉ
     </button>
@@ -418,8 +429,6 @@
   </div>
 
 </section>
-
-
     <!-- =====================================================
          CIRCUIT — CONFIGURATION
     ====================================================== -->
