@@ -2845,7 +2845,7 @@ function renderProgression() {
 ========================================================= */
 
 function renderHistory() {
-
+renderProgression();
   const history =
     getHistory();
 
