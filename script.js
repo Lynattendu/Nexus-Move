@@ -2185,7 +2185,661 @@ function saveCircuitWorkout(
   updateHomeStats();
 }
 
+/* =========================================================
+   PROGRESSION CHRONOMÈTRE
+========================================================= */
 
+function normalizeActivityName(name) {
+
+  return String(name || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+/* =========================================================
+   CRÉER LES GROUPES COMPARABLES
+========================================================= */
+
+function getProgressGroups() {
+
+  const history =
+    getHistory();
+
+
+  const groups =
+    {};
+
+
+  history.forEach(function (session) {
+
+    /*
+       Pour l'instant :
+       progression uniquement sur les activités
+       enregistrées avec le chronomètre.
+    */
+
+    if (
+      session.type !== "chrono"
+    ) {
+      return;
+    }
+
+
+    const distance =
+      Number(session.distance);
+
+
+    const duration =
+      Number(session.duration);
+
+
+    if (
+      !session.name ||
+      !distance ||
+      !duration
+    ) {
+      return;
+    }
+
+
+    const key =
+      normalizeActivityName(session.name) +
+      "|" +
+      distance;
+
+
+    if (!groups[key]) {
+
+      groups[key] = {
+
+        name:
+          session.name,
+
+        distance:
+          distance,
+
+        sessions:
+          []
+
+      };
+    }
+
+
+    groups[key].sessions.push(
+      session
+    );
+
+  });
+
+
+  /*
+     On remet les séances dans
+     l'ordre chronologique :
+     ancienne -> récente
+  */
+
+  Object.values(groups).forEach(function (group) {
+
+    group.sessions.sort(function (a, b) {
+
+      return (
+        new Date(a.date) -
+        new Date(b.date)
+      );
+
+    });
+
+  });
+
+
+  return groups;
+}
+
+
+/* =========================================================
+   CALCUL TENDANCE
+========================================================= */
+
+function calculateProgress(group) {
+
+  const sessions =
+    group.sessions;
+
+
+  if (
+    sessions.length < 2
+  ) {
+    return null;
+  }
+
+
+  const first =
+    sessions[0];
+
+
+  const latest =
+    sessions[
+      sessions.length - 1
+    ];
+
+
+  const previous =
+    sessions[
+      sessions.length - 2
+    ];
+
+
+  /*
+     Pour une distance identique :
+     moins de temps = meilleure performance
+  */
+
+  const difference =
+    previous.duration -
+    latest.duration;
+
+
+  const percentage =
+    (
+      difference /
+      previous.duration
+    ) * 100;
+
+
+  /*
+     Zone stable :
+     moins de 2 % d'écart.
+  */
+
+  let status;
+  let label;
+
+
+  if (
+    percentage > 2
+  ) {
+
+    status =
+      "up";
+
+    label =
+      "En progression ↗";
+
+  } else if (
+    percentage < -2
+  ) {
+
+    status =
+      "down";
+
+    label =
+      "En recul ↘";
+
+  } else {
+
+    status =
+      "stable";
+
+    label =
+      "Stable →";
+  }
+
+
+  /*
+     Meilleur temps historique
+  */
+
+  const best =
+    sessions.reduce(function (
+      bestSession,
+      session
+    ) {
+
+      if (
+        session.duration <
+        bestSession.duration
+      ) {
+
+        return session;
+      }
+
+      return bestSession;
+
+    }, sessions[0]);
+
+
+  /*
+     Évolution depuis la toute
+     première séance.
+  */
+
+  const globalEvolution =
+    (
+      (
+        first.duration -
+        latest.duration
+      ) /
+      first.duration
+    ) * 100;
+
+
+  return {
+
+    latest:
+      latest,
+
+    previous:
+      previous,
+
+    best:
+      best,
+
+    status:
+      status,
+
+    label:
+      label,
+
+    percentage:
+      percentage,
+
+    globalEvolution:
+      globalEvolution,
+
+    sessionCount:
+      sessions.length
+
+  };
+}
+
+
+/* =========================================================
+   AFFICHER PROGRESSION
+========================================================= */
+
+function renderProgression() {
+
+  const container =
+    el("progressList");
+
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML =
+    "";
+
+
+  const groups =
+    getProgressGroups();
+
+
+  let displayed =
+    0;
+
+
+  Object.values(groups).forEach(function (group) {
+
+    const progress =
+      calculateProgress(group);
+
+
+    /*
+       Il faut au minimum
+       deux séances comparables.
+    */
+
+    if (!progress) {
+      return;
+    }
+
+
+    displayed++;
+
+
+    const card =
+      document.createElement(
+        "article"
+      );
+
+
+    card.className =
+      "progress-card";
+
+
+    /* HEADER */
+
+    const header =
+      document.createElement(
+        "div"
+      );
+
+
+    header.className =
+      "progress-card-header";
+
+
+    const titleZone =
+      document.createElement(
+        "div"
+      );
+
+
+    titleZone.className =
+      "progress-card-title";
+
+
+    const title =
+      document.createElement(
+        "strong"
+      );
+
+
+    title.textContent =
+      group.name;
+
+
+    const subtitle =
+      document.createElement(
+        "span"
+      );
+
+
+    subtitle.textContent =
+      group.distance +
+      " m • " +
+      progress.sessionCount +
+      " séances";
+
+
+    titleZone.appendChild(
+      title
+    );
+
+
+    titleZone.appendChild(
+      subtitle
+    );
+
+
+    const trend =
+      document.createElement(
+        "div"
+      );
+
+
+    trend.className =
+      "progress-trend " +
+      progress.status;
+
+
+    trend.textContent =
+      progress.label;
+
+
+    header.appendChild(
+      titleZone
+    );
+
+
+    header.appendChild(
+      trend
+    );
+
+
+    card.appendChild(
+      header
+    );
+
+
+    /* VALEURS */
+
+    const values =
+      document.createElement(
+        "div"
+      );
+
+
+    values.className =
+      "progress-values";
+
+
+    /* DERNIER */
+
+    const latestBox =
+      document.createElement(
+        "div"
+      );
+
+
+    latestBox.className =
+      "progress-value";
+
+
+    const latestValue =
+      document.createElement(
+        "strong"
+      );
+
+
+    latestValue.textContent =
+      formatDuration(
+        progress.latest.duration
+      );
+
+
+    const latestLabel =
+      document.createElement(
+        "span"
+      );
+
+
+    latestLabel.textContent =
+      "DERNIER";
+
+
+    latestBox.appendChild(
+      latestValue
+    );
+
+
+    latestBox.appendChild(
+      latestLabel
+    );
+
+
+    /* PRÉCÉDENT */
+
+    const previousBox =
+      document.createElement(
+        "div"
+      );
+
+
+    previousBox.className =
+      "progress-value";
+
+
+    const previousValue =
+      document.createElement(
+        "strong"
+      );
+
+
+    previousValue.textContent =
+      formatDuration(
+        progress.previous.duration
+      );
+
+
+    const previousLabel =
+      document.createElement(
+        "span"
+      );
+
+
+    previousLabel.textContent =
+      "PRÉCÉDENT";
+
+
+    previousBox.appendChild(
+      previousValue
+    );
+
+
+    previousBox.appendChild(
+      previousLabel
+    );
+
+
+    /* RECORD */
+
+    const bestBox =
+      document.createElement(
+        "div"
+      );
+
+
+    bestBox.className =
+      "progress-value";
+
+
+    const bestValue =
+      document.createElement(
+        "strong"
+      );
+
+
+    bestValue.textContent =
+      formatDuration(
+        progress.best.duration
+      );
+
+
+    const bestLabel =
+      document.createElement(
+        "span"
+      );
+
+
+    bestLabel.textContent =
+      "RECORD";
+
+
+    bestBox.appendChild(
+      bestValue
+    );
+
+
+    bestBox.appendChild(
+      bestLabel
+    );
+
+
+    values.appendChild(
+      latestBox
+    );
+
+
+    values.appendChild(
+      previousBox
+    );
+
+
+    values.appendChild(
+      bestBox
+    );
+
+
+    card.appendChild(
+      values
+    );
+
+
+    /* ÉVOLUTION GLOBALE */
+
+    const evolution =
+      document.createElement(
+        "div"
+      );
+
+
+    evolution.className =
+      "progress-evolution";
+
+
+    const global =
+      progress.globalEvolution;
+
+
+    if (
+      global > 0
+    ) {
+
+      evolution.innerHTML =
+        "Depuis la première séance : " +
+        "<strong>+" +
+        global.toFixed(1) +
+        " %</strong>";
+
+    } else if (
+      global < 0
+    ) {
+
+      evolution.innerHTML =
+        "Depuis la première séance : " +
+        "<strong>" +
+        global.toFixed(1) +
+        " %</strong>";
+
+    } else {
+
+      evolution.innerHTML =
+        "Depuis la première séance : " +
+        "<strong>stable</strong>";
+    }
+
+
+    card.appendChild(
+      evolution
+    );
+
+
+    container.appendChild(
+      card
+    );
+
+  });
+
+
+  /* AUCUNE COMPARAISON */
+
+  if (
+    displayed === 0
+  ) {
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+
+    empty.className =
+      "progress-empty";
+
+
+    empty.textContent =
+      "Il faut au moins deux séances avec la même activité et la même distance pour calculer ta progression.";
+
+
+    container.appendChild(
+      empty
+    );
+  }
+}
 /* =========================================================
    AFFICHAGE HISTORIQUE
 ========================================================= */
