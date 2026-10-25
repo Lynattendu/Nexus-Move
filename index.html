@@ -253,106 +253,144 @@
 
 
     <!-- =====================================================
-         CHRONOMÈTRE
-    ====================================================== -->
+     CHRONOMÈTRE
+====================================================== -->
 
-    <section
-      class="screen"
-      id="chronoScreen"
+<section
+  class="screen"
+  id="chronoScreen"
+>
+
+  <header class="screen-header">
+
+    <button
+      class="back-btn"
+      data-back-home
+      type="button"
+    >
+      ‹
+    </button>
+
+    <div>
+
+      <span class="screen-kicker">
+        NEXUS MOVE
+      </span>
+
+      <h2>
+        Chronomètre
+      </h2>
+
+    </div>
+
+  </header>
+
+
+  <div class="chrono-content">
+
+
+    <!-- NOM ACTIVITÉ -->
+
+    <div
+      class="setting-card"
+      style="width:100%; margin-bottom:28px;"
     >
 
+      <label for="chronoActivityName">
+        Nom de l'activité
+      </label>
 
-      <header class="screen-header">
+      <input
+        id="chronoActivityName"
+        type="text"
+        placeholder="Ex : Rameur, Course, SkiErg..."
+        autocomplete="off"
+        style="
+          width:100%;
+          height:56px;
+          padding:0 16px;
+          border-radius:16px;
+          border:1px solid rgba(255,255,255,0.09);
+          background:rgba(255,255,255,0.05);
+          color:white;
+          font-size:17px;
+        "
+      >
 
-        <button
-          class="back-btn"
-          data-back-home
-          type="button"
-        >
-          ‹
-        </button>
-
-        <div>
-
-          <span class="screen-kicker">
-            NEXUS MOVE
-          </span>
-
-          <h2>
-            Chronomètre
-          </h2>
-
-        </div>
-
-      </header>
+    </div>
 
 
-      <div class="chrono-content">
+    <div
+      class="chrono-status"
+      id="chronoStatus"
+    >
+      PRÊT
+    </div>
 
 
-        <div
-          class="chrono-status"
-          id="chronoStatus"
-        >
-          PRÊT
-        </div>
+    <div
+      class="chrono-display"
+      id="chronoDisplay"
+    >
+      00:00.0
+    </div>
 
 
-        <div
-          class="chrono-display"
-          id="chronoDisplay"
-        >
-          00:00.0
-        </div>
+    <div class="chrono-actions">
+
+      <button
+        class="action-btn start-btn"
+        id="chronoStartBtn"
+        type="button"
+      >
+        Démarrer
+      </button>
 
 
-        <div class="chrono-actions">
-
-          <button
-            class="action-btn start-btn"
-            id="chronoStartBtn"
-            type="button"
-          >
-            Démarrer
-          </button>
-
-
-          <button
-            class="action-btn pause-btn"
-            id="chronoPauseBtn"
-            type="button"
-            disabled
-          >
-            Stop
-          </button>
+      <button
+        class="action-btn pause-btn"
+        id="chronoPauseBtn"
+        type="button"
+        disabled
+      >
+        Stop
+      </button>
 
 
-          <button
-            class="action-btn resume-btn"
-            id="chronoResumeBtn"
-            type="button"
-            disabled
-          >
-            Reprendre
-          </button>
+      <button
+        class="action-btn resume-btn"
+        id="chronoResumeBtn"
+        type="button"
+        disabled
+      >
+        Reprendre
+      </button>
 
 
-          <button
-            class="action-btn reset-btn"
-            id="chronoResetBtn"
-            type="button"
-          >
-            Remise à zéro
-          </button>
+      <button
+        class="action-btn reset-btn"
+        id="chronoResetBtn"
+        type="button"
+      >
+        Remise à zéro
+      </button>
 
-        </div>
-
-
-      </div>
+    </div>
 
 
-    </section>
+    <button
+      class="big-start-btn"
+      id="saveChronoBtn"
+      type="button"
+      style="margin-top:20px;"
+    >
+      ENREGISTRER L'ACTIVITÉ
+    </button>
 
+
+  </div>
+
+</section>
 
 
     <!-- =====================================================
