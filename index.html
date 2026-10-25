@@ -1,1 +1,1160 @@
+<!DOCTYPE html>
+<html lang="fr">
 
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#07111f"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="NEXUS MOVE"
+  >
+
+  <title>NEXUS MOVE</title>
+
+
+  <!-- Icône écran d'accueil -->
+
+  <link
+    rel="apple-touch-icon"
+    href="images/Icone-app-chrono.PNG"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="images/Icone-app-chrono.PNG"
+  >
+
+
+  <!-- CSS -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       APPLICATION
+  ====================================================== -->
+
+  <main class="app">
+
+
+    <!-- =====================================================
+         ÉCRAN ACCUEIL
+    ====================================================== -->
+
+    <section
+      class="screen active"
+      id="homeScreen"
+    >
+
+      <div class="home-header">
+
+        <div class="logo-zone">
+
+          <div class="logo-icon">
+            N
+          </div>
+
+          <div>
+
+            <p class="app-kicker">
+              TRAINING SYSTEM
+            </p>
+
+            <h1>
+              NEXUS MOVE
+            </h1>
+
+          </div>
+
+        </div>
+
+
+        <p class="home-subtitle">
+          Chrono • Circuits • Progression
+        </p>
+
+      </div>
+
+
+      <div class="home-menu">
+
+
+        <!-- CHRONOMÈTRE -->
+
+        <button
+          class="home-card"
+          id="openChronoBtn"
+          type="button"
+        >
+
+          <span class="home-card-icon">
+            ⏱
+          </span>
+
+          <span class="home-card-content">
+
+            <strong>
+              Chronomètre
+            </strong>
+
+            <small>
+              Chronométrage libre
+            </small>
+
+          </span>
+
+          <span class="home-card-arrow">
+            ›
+          </span>
+
+        </button>
+
+
+        <!-- CIRCUIT -->
+
+        <button
+          class="home-card primary"
+          id="openCircuitBtn"
+          type="button"
+        >
+
+          <span class="home-card-icon">
+            ⚡
+          </span>
+
+          <span class="home-card-content">
+
+            <strong>
+              Circuit
+            </strong>
+
+            <small>
+              Temps • répétitions • tours
+            </small>
+
+          </span>
+
+          <span class="home-card-arrow">
+            ›
+          </span>
+
+        </button>
+
+
+        <!-- HISTORIQUE -->
+
+        <button
+          class="home-card"
+          id="openHistoryBtn"
+          type="button"
+        >
+
+          <span class="home-card-icon">
+            ◷
+          </span>
+
+          <span class="home-card-content">
+
+            <strong>
+              Historique
+            </strong>
+
+            <small>
+              Retrouver mes entraînements
+            </small>
+
+          </span>
+
+          <span class="home-card-arrow">
+            ›
+          </span>
+
+        </button>
+
+
+      </div>
+
+
+      <div class="home-stats">
+
+        <div class="mini-stat">
+
+          <strong id="homeWorkoutCount">
+            0
+          </strong>
+
+          <span>
+            séances
+          </span>
+
+        </div>
+
+
+        <div class="mini-stat">
+
+          <strong id="homeExerciseCount">
+            0
+          </strong>
+
+          <span>
+            exercices
+          </span>
+
+        </div>
+
+
+        <div class="mini-stat">
+
+          <strong id="homeTotalTime">
+            0 min
+          </strong>
+
+          <span>
+            entraînement
+          </span>
+
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CHRONOMÈTRE
+    ====================================================== -->
+
+    <section
+      class="screen"
+      id="chronoScreen"
+    >
+
+
+      <header class="screen-header">
+
+        <button
+          class="back-btn"
+          data-back-home
+          type="button"
+        >
+          ‹
+        </button>
+
+        <div>
+
+          <span class="screen-kicker">
+            NEXUS MOVE
+          </span>
+
+          <h2>
+            Chronomètre
+          </h2>
+
+        </div>
+
+      </header>
+
+
+      <div class="chrono-content">
+
+
+        <div
+          class="chrono-status"
+          id="chronoStatus"
+        >
+          PRÊT
+        </div>
+
+
+        <div
+          class="chrono-display"
+          id="chronoDisplay"
+        >
+          00:00.0
+        </div>
+
+
+        <div class="chrono-actions">
+
+          <button
+            class="action-btn start-btn"
+            id="chronoStartBtn"
+            type="button"
+          >
+            Démarrer
+          </button>
+
+
+          <button
+            class="action-btn pause-btn"
+            id="chronoPauseBtn"
+            type="button"
+            disabled
+          >
+            Stop
+          </button>
+
+
+          <button
+            class="action-btn resume-btn"
+            id="chronoResumeBtn"
+            type="button"
+            disabled
+          >
+            Reprendre
+          </button>
+
+
+          <button
+            class="action-btn reset-btn"
+            id="chronoResetBtn"
+            type="button"
+          >
+            Remise à zéro
+          </button>
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CIRCUIT — CONFIGURATION
+    ====================================================== -->
+
+    <section
+      class="screen"
+      id="circuitSetupScreen"
+    >
+
+
+      <header class="screen-header">
+
+        <button
+          class="back-btn"
+          data-back-home
+          type="button"
+        >
+          ‹
+        </button>
+
+        <div>
+
+          <span class="screen-kicker">
+            NEXUS MOVE
+          </span>
+
+          <h2>
+            Nouveau circuit
+          </h2>
+
+        </div>
+
+      </header>
+
+
+
+      <div class="setup-content">
+
+
+        <!-- NOMBRE DE TOURS -->
+
+        <div class="setting-card">
+
+          <label for="roundCount">
+            Nombre de tours
+          </label>
+
+          <div class="number-control">
+
+            <button
+              class="minus-btn"
+              type="button"
+              data-target="roundCount"
+            >
+              −
+            </button>
+
+            <input
+              id="roundCount"
+              type="number"
+              min="1"
+              max="99"
+              value="3"
+            >
+
+            <button
+              class="plus-btn"
+              type="button"
+              data-target="roundCount"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- REPOS ENTRE EXERCICES -->
+
+        <div class="setting-card">
+
+          <label for="exerciseRest">
+            Repos entre les exercices
+          </label>
+
+          <div class="time-input-row">
+
+            <input
+              id="exerciseRest"
+              type="number"
+              min="0"
+              max="600"
+              value="0"
+            >
+
+            <span>
+              secondes
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- REPOS ENTRE TOURS -->
+
+        <div class="setting-card">
+
+          <label for="roundRest">
+            Repos entre les tours
+          </label>
+
+          <div class="time-input-row">
+
+            <input
+              id="roundRest"
+              type="number"
+              min="0"
+              max="1800"
+              value="60"
+            >
+
+            <span>
+              secondes
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- LISTE EXERCICES -->
+
+        <div class="exercise-section">
+
+          <div class="section-title-row">
+
+            <div>
+
+              <span class="section-kicker">
+                CIRCUIT
+              </span>
+
+              <h3>
+                Exercices
+              </h3>
+
+            </div>
+
+            <span
+              class="exercise-count"
+              id="setupExerciseCount"
+            >
+              0
+            </span>
+
+          </div>
+
+
+          <div
+            class="exercise-list"
+            id="exerciseList"
+          >
+          </div>
+
+
+          <button
+            class="add-exercise-btn"
+            id="addExerciseBtn"
+            type="button"
+          >
+            + Ajouter un exercice
+          </button>
+
+        </div>
+
+
+
+        <button
+          class="big-start-btn"
+          id="startCircuitBtn"
+          type="button"
+        >
+          DÉMARRER LE CIRCUIT
+        </button>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MODALE AJOUT EXERCICE
+    ====================================================== -->
+
+    <div
+      class="modal"
+      id="exerciseModal"
+      aria-hidden="true"
+    >
+
+      <div class="modal-overlay"></div>
+
+
+      <div class="modal-panel">
+
+        <div class="modal-header">
+
+          <div>
+
+            <span class="section-kicker">
+              EXERCICE
+            </span>
+
+            <h3>
+              Ajouter un exercice
+            </h3>
+
+          </div>
+
+
+          <button
+            class="modal-close"
+            id="closeExerciseModalBtn"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+
+
+        <label class="field-label">
+
+          Nom de l'exercice
+
+          <input
+            id="exerciseName"
+            type="text"
+            placeholder="Ex : Burpees"
+            autocomplete="off"
+          >
+
+        </label>
+
+
+
+        <div class="exercise-type-selector">
+
+          <button
+            class="type-btn active"
+            id="typeTimeBtn"
+            type="button"
+            data-type="time"
+          >
+            Temps
+          </button>
+
+
+          <button
+            class="type-btn"
+            id="typeRepsBtn"
+            type="button"
+            data-type="reps"
+          >
+            Répétitions
+          </button>
+
+        </div>
+
+
+
+        <!-- TEMPS -->
+
+        <div
+          class="exercise-option active"
+          id="timeOption"
+        >
+
+          <label class="field-label">
+
+            Durée
+
+            <div class="time-input-row">
+
+              <input
+                id="exerciseTime"
+                type="number"
+                min="1"
+                max="3600"
+                value="45"
+              >
+
+              <span>
+                secondes
+              </span>
+
+            </div>
+
+          </label>
+
+        </div>
+
+
+
+        <!-- RÉPÉTITIONS -->
+
+        <div
+          class="exercise-option"
+          id="repsOption"
+        >
+
+          <label class="field-label">
+
+            Nombre de répétitions
+
+            <input
+              id="exerciseReps"
+              type="number"
+              min="1"
+              max="999"
+              value="10"
+            >
+
+          </label>
+
+        </div>
+
+
+
+        <button
+          class="modal-save-btn"
+          id="saveExerciseBtn"
+          type="button"
+        >
+          Ajouter au circuit
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CIRCUIT EN COURS
+    ====================================================== -->
+
+    <section
+      class="screen workout-screen"
+      id="circuitWorkoutScreen"
+    >
+
+
+      <header class="workout-header">
+
+        <span>
+          NEXUS MOVE
+        </span>
+
+        <button
+          class="workout-close-btn"
+          id="quitWorkoutBtn"
+          type="button"
+        >
+          ×
+        </button>
+
+      </header>
+
+
+
+      <div class="workout-main">
+
+
+        <div
+          class="phase-label"
+          id="workoutPhase"
+        >
+          PRÊT
+        </div>
+
+
+        <div
+          class="workout-exercise-name"
+          id="workoutExerciseName"
+        >
+          Circuit
+        </div>
+
+
+        <div
+          class="workout-timer"
+          id="workoutTimer"
+        >
+          00:00
+        </div>
+
+
+        <div
+          class="reps-display"
+          id="repsDisplay"
+          hidden
+        >
+
+          <strong id="workoutReps">
+            10
+          </strong>
+
+          <span>
+            RÉPÉTITIONS
+          </span>
+
+        </div>
+
+
+
+        <div class="workout-progress">
+
+
+          <div class="progress-box">
+
+            <span>
+              Exercice
+            </span>
+
+            <strong id="workoutExerciseProgress">
+              1 / 1
+            </strong>
+
+          </div>
+
+
+          <div class="progress-box">
+
+            <span>
+              Tour
+            </span>
+
+            <strong id="workoutRoundProgress">
+              1 / 1
+            </strong>
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="workout-totals">
+
+
+          <div>
+
+            <strong id="completedExercises">
+              0
+            </strong>
+
+            <span>
+              exercices terminés
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="completedRounds">
+              0
+            </strong>
+
+            <span>
+              tours terminés
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+
+        <button
+          class="finish-reps-btn"
+          id="finishRepsBtn"
+          type="button"
+          hidden
+        >
+          TERMINÉ
+        </button>
+
+
+
+        <div class="workout-controls">
+
+          <button
+            class="action-btn start-btn"
+            id="workoutStartBtn"
+            type="button"
+          >
+            Démarrer
+          </button>
+
+
+          <button
+            class="action-btn pause-btn"
+            id="workoutPauseBtn"
+            type="button"
+            disabled
+          >
+            Stop
+          </button>
+
+
+          <button
+            class="action-btn resume-btn"
+            id="workoutResumeBtn"
+            type="button"
+            disabled
+          >
+            Reprendre
+          </button>
+
+
+          <button
+            class="action-btn reset-btn"
+            id="workoutResetBtn"
+            type="button"
+          >
+            Remise à zéro
+          </button>
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FIN DE CIRCUIT
+    ====================================================== -->
+
+    <section
+      class="screen"
+      id="workoutCompleteScreen"
+    >
+
+
+      <div class="complete-content">
+
+        <div class="complete-icon">
+          ✓
+        </div>
+
+
+        <span class="screen-kicker">
+          CIRCUIT TERMINÉ
+        </span>
+
+
+        <h2>
+          Bravo !
+        </h2>
+
+
+        <p>
+          Séance enregistrée dans ton historique.
+        </p>
+
+
+
+        <div class="complete-stats">
+
+
+          <div>
+
+            <strong id="completeRounds">
+              0
+            </strong>
+
+            <span>
+              tours
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="completeExercises">
+              0
+            </strong>
+
+            <span>
+              exercices
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="completeDuration">
+              0 min
+            </strong>
+
+            <span>
+              durée
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+
+        <button
+          class="big-start-btn"
+          id="completeHomeBtn"
+          type="button"
+        >
+          RETOUR À L'ACCUEIL
+        </button>
+
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         HISTORIQUE
+    ====================================================== -->
+
+    <section
+      class="screen"
+      id="historyScreen"
+    >
+
+
+      <header class="screen-header">
+
+        <button
+          class="back-btn"
+          data-back-home
+          type="button"
+        >
+          ‹
+        </button>
+
+
+        <div>
+
+          <span class="screen-kicker">
+            NEXUS MOVE
+          </span>
+
+          <h2>
+            Historique
+          </h2>
+
+        </div>
+
+      </header>
+
+
+
+      <div class="history-content">
+
+
+        <div class="history-summary">
+
+
+          <div>
+
+            <strong id="historyWorkoutCount">
+              0
+            </strong>
+
+            <span>
+              séances
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="historyExerciseCount">
+              0
+            </strong>
+
+            <span>
+              exercices
+            </span>
+
+          </div>
+
+
+          <div>
+
+            <strong id="historyTotalTime">
+              0 min
+            </strong>
+
+            <span>
+              entraînement
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+
+        <div
+          class="history-list"
+          id="historyList"
+        >
+
+
+          <div
+            class="empty-history"
+            id="emptyHistory"
+          >
+
+            <div class="empty-history-icon">
+              ◷
+            </div>
+
+            <h3>
+              Aucun entraînement
+            </h3>
+
+            <p>
+              Tes circuits terminés apparaîtront ici.
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+
+        <button
+          class="clear-history-btn"
+          id="clearHistoryBtn"
+          type="button"
+        >
+          Effacer l'historique
+        </button>
+
+
+      </div>
+
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FLASH VISUEL CHANGEMENT DE PHASE
+  ====================================================== -->
+
+  <div
+    class="phase-flash"
+    id="phaseFlash"
+  >
+  </div>
+
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
+
+  <script src="script.js"></script>
+
+
+</body>
+
+</html>
