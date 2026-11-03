@@ -2151,30 +2151,48 @@ function saveCircuitWorkout(
     getHistory();
 
 
-  history.unshift({
+  const selectedRoutine =
+  JSON.parse(
+    localStorage.getItem(
+      "nexusMoveSelectedRoutine"
+    )
+  );
 
-    id:
-      Date.now(),
 
-    type:
-      "circuit",
+history.unshift({
 
-    date:
-      new Date().toISOString(),
+  id: Date.now(),
 
-    rounds:
-      completedRoundCount,
+  type: "circuit",
 
-    completedExercises:
-      completedExerciseCount,
+  date:
+    new Date().toISOString(),
 
-    duration:
-      duration,
+  rounds:
+    completedRoundCount,
 
-    exercises:
-      workout.exercises
+  completedExercises:
+    completedExerciseCount,
 
-  });
+  duration,
+
+  exercises:
+    workout.exercises,
+
+
+  /* ROUTINE UTILISÉE */
+
+  routineId:
+    selectedRoutine
+      ? selectedRoutine.id
+      : null,
+
+  routineName:
+    selectedRoutine
+      ? selectedRoutine.name
+      : null
+
+});
 
 
   saveHistory(
