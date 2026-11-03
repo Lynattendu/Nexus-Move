@@ -3243,7 +3243,24 @@ input[type="number"] {
   display: none !important;
 }
 
+/* =========================================================
+   CORRECTION POSITION MES ROUTINES
+========================================================= */
 
+.routines-section {
+  margin-top: 12px;
+  padding-top: 8px;
+}
+
+.routines-header {
+  position: relative;
+  z-index: 2;
+}
+
+.routine-add-btn {
+  position: relative;
+  z-index: 3;
+}
 
 
 
