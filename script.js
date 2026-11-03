@@ -5588,6 +5588,10 @@ renderNexusRoutines();
    PROGRESSION DES ROUTINES
 ========================================================= */
 
+/* =========================================================
+   PROGRESSION DES ROUTINES
+========================================================= */
+
 function renderRoutineProgression() {
 
   const progressList =
@@ -5620,14 +5624,23 @@ function renderRoutineProgression() {
   }
 
 
-  /* Récupérer uniquement les circuits avec une routine */
+  /* =====================================================
+     UNIQUEMENT LES ROUTINES
+  ===================================================== */
 
   const routineSessions =
     history.filter(session =>
+
       session &&
+
       session.type === "circuit" &&
-      session.routineName &&
-      Number(session.duration) > 0
+
+      session.routineId &&
+
+      Number(
+        session.duration
+      ) > 0
+
     );
 
 
@@ -5636,34 +5649,42 @@ function renderRoutineProgression() {
   }
 
 
-  /* Grouper les séances par routine */
+  /* =====================================================
+     GROUPER PAR ROUTINE
+  ===================================================== */
 
   const groups = {};
 
 
-  routineSessions.forEach(session => {
+  routineSessions.forEach(
+    session => {
 
-    const key =
-      session.routineId ||
-      session.routineName;
+      const key =
+        session.routineId;
 
 
-    if (!groups[key]) {
+      if (!groups[key]) {
 
-      groups[key] = [];
+        groups[key] = [];
+
+      }
+
+
+      groups[key].push(
+        session
+      );
 
     }
+  );
 
 
-    groups[key].push(
-      session
-    );
+  /* =====================================================
+     UNE CARTE PAR ROUTINE
+  ===================================================== */
 
-  });
+  Object.values(groups)
+    .forEach(sessions => {
 
-
-  Object.values(groups).forEach(
-    sessions => {
 
       sessions.sort(
         (a, b) =>
@@ -5672,20 +5693,9 @@ function renderRoutineProgression() {
       );
 
 
-      /*
-        Il faut au moins 2 séances
-        de la même routine
-      */
-
       if (sessions.length < 2) {
         return;
       }
-
-
-      const latest =
-        sessions[
-          sessions.length - 1
-        ];
 
 
       const previous =
@@ -5694,96 +5704,284 @@ function renderRoutineProgression() {
         ];
 
 
-      const latestDuration =
-        Number(latest.duration);
+      const latest =
+        sessions[
+          sessions.length - 1
+        ];
 
+
+      /* =================================================
+         DURÉE
+      ================================================= */
 
       const previousDuration =
-        Number(previous.duration);
-
-
-      const difference =
-        previousDuration -
-        latestDuration;
-
-
-      const percent =
-        (
-          difference /
-          previousDuration
-        ) * 100;
-
-
-      /* RECORD */
-
-      const bestDuration =
-        Math.min(
-          ...sessions.map(
-            session =>
-              Number(
-                session.duration
-              )
-          )
+        Number(
+          previous.duration || 0
         );
 
 
-      let status = "";
-      let icon = "";
-      let message = "";
+      const latestDuration =
+        Number(
+          latest.duration || 0
+        );
 
 
-      /*
-        Plus rapide de plus de 2 %
-      */
+      /* =================================================
+         VOLUME
+      ================================================= */
 
-      if (percent > 2) {
+      const previousVolume =
+        getRoutineSessionVolume(
+          previous
+        );
+
+
+      const latestVolume =
+        getRoutineSessionVolume(
+          latest
+        );
+
+
+      /* =================================================
+         EFFICACITÉ
+         répétitions par minute
+      ================================================= */
+
+      const previousEfficiency =
+        previousDuration > 0
+          ? previousVolume /
+            (
+              previousDuration / 60
+            )
+          : 0;
+
+
+      const latestEfficiency =
+        latestDuration > 0
+          ? latestVolume /
+            (
+              latestDuration / 60
+            )
+          : 0;
+
+
+      /* =================================================
+         VARIATIONS %
+      ================================================= */
+
+      const volumeChange =
+        previousVolume > 0
+          ? (
+              (
+                latestVolume -
+                previousVolume
+              ) /
+              previousVolume
+            ) * 100
+          : 0;
+
+
+      const efficiencyChange =
+        previousEfficiency > 0
+          ? (
+              (
+                latestEfficiency -
+                previousEfficiency
+              ) /
+              previousEfficiency
+            ) * 100
+          : 0;
+
+
+      /* =================================================
+         ANALYSE
+      ================================================= */
+
+      let icon = "→";
+
+      let status =
+        "progress-stable";
+
+      let message =
+        "Ton niveau reste stable.";
+
+
+      /* -------------------------------------------------
+         PLUS DE VOLUME + PLUS EFFICACE
+      ------------------------------------------------- */
+
+      if (
+        volumeChange > 2 &&
+        efficiencyChange > 2
+      ) {
+
+        icon = "↗";
 
         status =
           "progress-up";
 
-        icon = "↗";
-
         message =
-          "Tu réalises la même routine plus rapidement.";
+          "Tu fais plus de travail et tu es aussi plus efficace.";
 
       }
 
 
-      /*
-        Variation inférieure à 2 %
-      */
+      /* -------------------------------------------------
+         PLUS DE VOLUME, EFFICACITÉ STABLE
+      ------------------------------------------------- */
 
       else if (
-        percent >= -2
+        volumeChange > 2 &&
+        efficiencyChange >= -2
       ) {
+
+        icon = "↗";
+
+        status =
+          "progress-up";
+
+        message =
+          "Tu réalises davantage de travail tout en gardant ton rythme.";
+
+      }
+
+
+      /* -------------------------------------------------
+         PLUS DE VOLUME MAIS PLUS LENT
+      ------------------------------------------------- */
+
+      else if (
+        volumeChange > 2
+      ) {
+
+        icon = "↗";
+
+        status =
+          "progress-up";
+
+        message =
+          "Ton volume augmente. C'est une progression de charge, même si la séance est plus longue.";
+
+      }
+
+
+      /* -------------------------------------------------
+         MÊME VOLUME MAIS PLUS EFFICACE
+      ------------------------------------------------- */
+
+      else if (
+        Math.abs(
+          volumeChange
+        ) <= 2 &&
+        efficiencyChange > 2
+      ) {
+
+        icon = "↗";
+
+        status =
+          "progress-up";
+
+        message =
+          "Même travail, mais réalisé plus efficacement.";
+
+      }
+
+
+      /* -------------------------------------------------
+         STABLE
+      ------------------------------------------------- */
+
+      else if (
+        Math.abs(
+          volumeChange
+        ) <= 2 &&
+        Math.abs(
+          efficiencyChange
+        ) <= 2
+      ) {
+
+        icon = "→";
 
         status =
           "progress-stable";
 
+        message =
+          "Volume et rythme sont stables.";
+
+      }
+
+
+      /* -------------------------------------------------
+         VOLUME PLUS FAIBLE
+      ------------------------------------------------- */
+
+      else if (
+        volumeChange < -2
+      ) {
+
         icon = "→";
 
-        message =
-          "Ton rythme est stable.";
-
-      }
-
-
-      /*
-        Plus lent
-      */
-
-      else {
-
         status =
-          "progress-down";
-
-        icon = "↘";
+          "progress-stable";
 
         message =
-          "Séance un peu plus lente aujourd'hui.";
+          "Le volume de cette séance était plus faible. On évite de comparer directement les temps.";
 
       }
 
+
+      /* =================================================
+         RECORD D'EFFICACITÉ
+      ================================================= */
+
+      let bestEfficiency = 0;
+
+
+      sessions.forEach(
+        session => {
+
+          const duration =
+            Number(
+              session.duration || 0
+            );
+
+
+          const volume =
+            getRoutineSessionVolume(
+              session
+            );
+
+
+          if (
+            duration <= 0 ||
+            volume <= 0
+          ) {
+
+            return;
+
+          }
+
+
+          const efficiency =
+            volume /
+            (
+              duration / 60
+            );
+
+
+          bestEfficiency =
+            Math.max(
+              bestEfficiency,
+              efficiency
+            );
+
+        }
+      );
+
+
+      /* =================================================
+         CARTE
+      ================================================= */
 
       const card =
         document.createElement(
@@ -5805,7 +6003,10 @@ function renderRoutineProgression() {
             <div class="progress-card-title">
 
               ${
-                latest.routineName
+                escapeRoutineText(
+                  latest.routineName ||
+                  "Routine"
+                )
               }
 
             </div>
@@ -5815,7 +6016,7 @@ function renderRoutineProgression() {
               ${
                 sessions.length
               }
-              séances comparées
+              séances enregistrées
 
             </div>
 
@@ -5836,16 +6037,18 @@ function renderRoutineProgression() {
           <div>
 
             <span>
-              Précédente
+              Volume
             </span>
 
             <strong>
               ${
-                formatRoutineProgressTime(
-                  previousDuration
-                )
+                latestVolume
               }
             </strong>
+
+            <small>
+              répétitions
+            </small>
 
           </div>
 
@@ -5853,7 +6056,7 @@ function renderRoutineProgression() {
           <div>
 
             <span>
-              Dernière
+              Durée
             </span>
 
             <strong>
@@ -5870,16 +6073,19 @@ function renderRoutineProgression() {
           <div>
 
             <span>
-              Record
+              Efficacité
             </span>
 
             <strong>
               ${
-                formatRoutineProgressTime(
-                  bestDuration
-                )
+                latestEfficiency
+                  .toFixed(1)
               }
             </strong>
+
+            <small>
+              reps/min
+            </small>
 
           </div>
 
@@ -5892,6 +6098,36 @@ function renderRoutineProgression() {
 
         </div>
 
+
+        <div class="routine-progress-details">
+
+          Volume :
+          ${
+            formatRoutineChange(
+              volumeChange
+            )
+          }
+
+          •
+
+          Efficacité :
+          ${
+            formatRoutineChange(
+              efficiencyChange
+            )
+          }
+
+          <br>
+
+          Meilleure efficacité :
+          ${
+            bestEfficiency
+              .toFixed(1)
+          }
+          reps/min
+
+        </div>
+
       `;
 
 
@@ -5899,7 +6135,141 @@ function renderRoutineProgression() {
         card
       );
 
-    }
+    });
+
+}
+
+
+/* =========================================================
+   VOLUME D'UNE SÉANCE
+========================================================= */
+
+function getRoutineSessionVolume(
+  session
+) {
+
+  /*
+    Nouveau système
+  */
+
+  if (
+    Number(
+      session.routineVolume
+    ) > 0
+  ) {
+
+    return Number(
+      session.routineVolume
+    );
+
+  }
+
+
+  /*
+    Snapshot
+  */
+
+  if (
+    session.routineSnapshot &&
+    Number(
+      session.routineSnapshot
+        .totalVolume
+    ) > 0
+  ) {
+
+    return Number(
+      session.routineSnapshot
+        .totalVolume
+    );
+
+  }
+
+
+  /*
+    Anciennes séances :
+    tentative de reconstruction
+  */
+
+  if (
+    Array.isArray(
+      session.exercises
+    )
+  ) {
+
+    const repsPerRound =
+      session.exercises.reduce(
+        (
+          total,
+          exercise
+        ) => {
+
+          return (
+            total +
+            Number(
+              exercise.reps || 0
+            )
+          );
+
+        },
+        0
+      );
+
+
+    const rounds =
+      Number(
+        session.rounds || 1
+      );
+
+
+    return (
+      repsPerRound *
+      rounds
+    );
+
+  }
+
+
+  return 0;
+
+}
+
+
+/* =========================================================
+   VARIATION %
+========================================================= */
+
+function formatRoutineChange(
+  value
+) {
+
+  if (
+    !Number.isFinite(value)
+  ) {
+
+    return "—";
+
+  }
+
+
+  if (
+    Math.abs(value) < 0.5
+  ) {
+
+    return "stable";
+
+  }
+
+
+  const sign =
+    value > 0
+      ? "+"
+      : "";
+
+
+  return (
+    sign +
+    value.toFixed(1) +
+    " %"
   );
 
 }
