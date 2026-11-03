@@ -5466,4 +5466,356 @@ loadNexusRoutines();
 
 renderNexusRoutines();
 
+/* =========================================================
+   PROGRESSION DES ROUTINES
+========================================================= */
 
+function renderRoutineProgression() {
+
+  const progressList =
+    document.getElementById(
+      "progressList"
+    );
+
+
+  if (!progressList) {
+    return;
+  }
+
+
+  let history = [];
+
+
+  try {
+
+    history =
+      JSON.parse(
+        localStorage.getItem(
+          "nexusMoveHistory"
+        )
+      ) || [];
+
+  } catch (error) {
+
+    return;
+
+  }
+
+
+  /* Récupérer uniquement les circuits avec une routine */
+
+  const routineSessions =
+    history.filter(session =>
+      session &&
+      session.type === "circuit" &&
+      session.routineName &&
+      Number(session.duration) > 0
+    );
+
+
+  if (!routineSessions.length) {
+    return;
+  }
+
+
+  /* Grouper les séances par routine */
+
+  const groups = {};
+
+
+  routineSessions.forEach(session => {
+
+    const key =
+      session.routineId ||
+      session.routineName;
+
+
+    if (!groups[key]) {
+
+      groups[key] = [];
+
+    }
+
+
+    groups[key].push(
+      session
+    );
+
+  });
+
+
+  Object.values(groups).forEach(
+    sessions => {
+
+      sessions.sort(
+        (a, b) =>
+          new Date(a.date) -
+          new Date(b.date)
+      );
+
+
+      /*
+        Il faut au moins 2 séances
+        de la même routine
+      */
+
+      if (sessions.length < 2) {
+        return;
+      }
+
+
+      const latest =
+        sessions[
+          sessions.length - 1
+        ];
+
+
+      const previous =
+        sessions[
+          sessions.length - 2
+        ];
+
+
+      const latestDuration =
+        Number(latest.duration);
+
+
+      const previousDuration =
+        Number(previous.duration);
+
+
+      const difference =
+        previousDuration -
+        latestDuration;
+
+
+      const percent =
+        (
+          difference /
+          previousDuration
+        ) * 100;
+
+
+      /* RECORD */
+
+      const bestDuration =
+        Math.min(
+          ...sessions.map(
+            session =>
+              Number(
+                session.duration
+              )
+          )
+        );
+
+
+      let status = "";
+      let icon = "";
+      let message = "";
+
+
+      /*
+        Plus rapide de plus de 2 %
+      */
+
+      if (percent > 2) {
+
+        status =
+          "progress-up";
+
+        icon = "↗";
+
+        message =
+          "Tu réalises la même routine plus rapidement.";
+
+      }
+
+
+      /*
+        Variation inférieure à 2 %
+      */
+
+      else if (
+        percent >= -2
+      ) {
+
+        status =
+          "progress-stable";
+
+        icon = "→";
+
+        message =
+          "Ton rythme est stable.";
+
+      }
+
+
+      /*
+        Plus lent
+      */
+
+      else {
+
+        status =
+          "progress-down";
+
+        icon = "↘";
+
+        message =
+          "Séance un peu plus lente aujourd'hui.";
+
+      }
+
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+
+      card.className =
+        "progress-card " +
+        status;
+
+
+      card.innerHTML = `
+
+        <div class="progress-card-header">
+
+          <div>
+
+            <div class="progress-card-title">
+
+              ${
+                latest.routineName
+              }
+
+            </div>
+
+            <div class="progress-card-subtitle">
+
+              ${
+                sessions.length
+              }
+              séances comparées
+
+            </div>
+
+          </div>
+
+
+          <div class="progress-card-icon">
+
+            ${icon}
+
+          </div>
+
+        </div>
+
+
+        <div class="progress-card-values">
+
+          <div>
+
+            <span>
+              Précédente
+            </span>
+
+            <strong>
+              ${
+                formatRoutineProgressTime(
+                  previousDuration
+                )
+              }
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Dernière
+            </span>
+
+            <strong>
+              ${
+                formatRoutineProgressTime(
+                  latestDuration
+                )
+              }
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Record
+            </span>
+
+            <strong>
+              ${
+                formatRoutineProgressTime(
+                  bestDuration
+                )
+              }
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="progress-card-message">
+
+          ${message}
+
+        </div>
+
+      `;
+
+
+      progressList.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   FORMAT DURÉE ROUTINE
+========================================================= */
+
+function formatRoutineProgressTime(seconds) {
+
+  seconds =
+    Math.round(
+      Number(seconds) || 0
+    );
+
+
+  const minutes =
+    Math.floor(
+      seconds / 60
+    );
+
+
+  const remainingSeconds =
+    seconds % 60;
+
+
+  return (
+    minutes +
+    " min " +
+    String(
+      remainingSeconds
+    ).padStart(2, "0") +
+    " s"
+  );
+
+}
