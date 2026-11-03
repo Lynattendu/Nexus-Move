@@ -2151,12 +2151,117 @@ function saveCircuitWorkout(
     getHistory();
 
 
-  const selectedRoutine =
-  JSON.parse(
-    localStorage.getItem(
-      "nexusMoveSelectedRoutine"
-    )
-  );
+  /* =========================================================
+   ROUTINE UTILISÉE POUR CETTE SÉANCE
+========================================================= */
+
+let selectedRoutine = null;
+
+try {
+
+  selectedRoutine =
+    JSON.parse(
+      localStorage.getItem(
+        "nexusMoveSelectedRoutine"
+      )
+    );
+
+} catch (error) {
+
+  selectedRoutine = null;
+
+}
+
+
+/* =========================================================
+   COPIE EXACTE DE LA ROUTINE AU MOMENT DE LA SÉANCE
+========================================================= */
+
+let routineSnapshot = null;
+
+let routineVolume = 0;
+
+
+if (
+  selectedRoutine &&
+  Array.isArray(
+    selectedRoutine.exercises
+  )
+) {
+
+  const repsPerRound =
+    selectedRoutine.exercises.reduce(
+      (total, exercise) => {
+
+        return (
+          total +
+          Number(
+            exercise.reps || 0
+          )
+        );
+
+      },
+      0
+    );
+
+
+  /*
+    On utilise le nombre de tours
+    réellement réalisés.
+  */
+
+  const actualRounds =
+    Number(
+      completedRoundCount ||
+      selectedRoutine.rounds ||
+      1
+    );
+
+
+  routineVolume =
+    repsPerRound *
+    actualRounds;
+
+
+  routineSnapshot = {
+
+    routineId:
+      selectedRoutine.id,
+
+    routineName:
+      selectedRoutine.name,
+
+    plannedRounds:
+      Number(
+        selectedRoutine.rounds || 1
+      ),
+
+    completedRounds:
+      actualRounds,
+
+    exercises:
+      selectedRoutine.exercises.map(
+        exercise => ({
+
+          name:
+            exercise.name,
+
+          reps:
+            Number(
+              exercise.reps || 0
+            )
+
+        })
+      ),
+
+    repsPerRound,
+
+    totalVolume:
+      routineVolume
+
+  };
+
+}
 
 
 history.unshift({
