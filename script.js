@@ -2288,14 +2288,26 @@ history.unshift({
   /* ROUTINE UTILISÉE */
 
   routineId:
-    selectedRoutine
-      ? selectedRoutine.id
-      : null,
+  selectedRoutine
+    ? selectedRoutine.id
+    : null,
 
-  routineName:
-    selectedRoutine
-      ? selectedRoutine.name
-      : null
+routineName:
+  selectedRoutine
+    ? selectedRoutine.name
+    : null,
+
+
+/* Copie de la routine utilisée ce jour-là */
+
+routineSnapshot:
+  routineSnapshot,
+
+
+/* Nombre total de répétitions réalisées */
+
+routineVolume:
+  routineVolume
 
 });
 
