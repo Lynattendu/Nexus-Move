@@ -3286,3 +3286,758 @@ showScreen(
 
 
 });
+
+
+/* =========================================================
+   HISTORIQUE — SPORT DU MATIN
+========================================================= */
+
+function getMorningSessions() {
+
+  let sessions = [];
+
+  // Cherche automatiquement l'historique dans le localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+
+    const key = localStorage.key(i);
+
+    try {
+
+      const data =
+        JSON.parse(localStorage.getItem(key));
+
+      if (!Array.isArray(data)) {
+        continue;
+      }
+
+      const chronoSessions =
+        data.filter(item =>
+          item &&
+          (
+            item.type === "chrono" ||
+            item.activity ||
+            item.activite
+          ) &&
+          (
+            item.duration ||
+            item.duree
+          ) &&
+          item.date
+        );
+
+      if (chronoSessions.length > sessions.length) {
+        sessions = chronoSessions;
+      }
+
+    } catch (error) {
+      // On ignore les données qui ne sont pas de l'historique
+    }
+
+  }
+
+
+  return sessions
+    .map(session => {
+
+      return {
+        ...session,
+
+        duration:
+          Number(
+            session.duration ||
+            session.duree ||
+            0
+          )
+      };
+
+    })
+    .filter(session =>
+      session.duration > 0
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.date) -
+        new Date(b.date)
+    );
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function morningDateKey(date) {
+
+  const d = new Date(date);
+
+  return (
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(d.getDate()).padStart(2, "0")
+  );
+}
+
+
+/* =========================================================
+   LUNDI DE LA SEMAINE
+========================================================= */
+
+function morningMonday() {
+
+  const date = new Date();
+
+  date.setHours(0, 0, 0, 0);
+
+  const day = date.getDay();
+
+  const diff =
+    day === 0
+      ? -6
+      : 1 - day;
+
+  date.setDate(
+    date.getDate() + diff
+  );
+
+  return date;
+}
+
+
+/* =========================================================
+   FORMAT DURÉE
+========================================================= */
+
+function morningFormatTotal(seconds) {
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  const hours =
+    Math.floor(minutes / 60);
+
+  const restMinutes =
+    minutes % 60;
+
+
+  if (hours > 0) {
+
+    return (
+      hours +
+      " h " +
+      restMinutes +
+      " min"
+    );
+
+  }
+
+  return minutes + " min";
+}
+
+
+/* =========================================================
+   CETTE SEMAINE
+========================================================= */
+
+function renderMorningWeek(sessions) {
+
+  const monday =
+    morningMonday();
+
+  const activeDays =
+    new Set();
+
+  let totalDuration = 0;
+
+
+  sessions.forEach(session => {
+
+    const sessionDate =
+      new Date(session.date);
+
+    sessionDate.setHours(0, 0, 0, 0);
+
+
+    const endWeek =
+      new Date(monday);
+
+    endWeek.setDate(
+      endWeek.getDate() + 7
+    );
+
+
+    if (
+      sessionDate >= monday &&
+      sessionDate < endWeek
+    ) {
+
+      activeDays.add(
+        morningDateKey(sessionDate)
+      );
+
+      totalDuration +=
+        session.duration;
+
+    }
+
+  });
+
+
+  const todayKey =
+    morningDateKey(new Date());
+
+
+  for (let i = 0; i < 7; i++) {
+
+    const date =
+      new Date(monday);
+
+    date.setDate(
+      date.getDate() + i
+    );
+
+
+    const dot =
+      document.getElementById(
+        "morning-day-" + (i + 1)
+      );
+
+
+    if (!dot) continue;
+
+
+    dot.classList.remove(
+      "active",
+      "today"
+    );
+
+
+    const key =
+      morningDateKey(date);
+
+
+    if (activeDays.has(key)) {
+      dot.classList.add("active");
+    }
+
+
+    if (key === todayKey) {
+      dot.classList.add("today");
+    }
+  }
+
+
+  const count =
+    activeDays.size;
+
+
+  const countElement =
+    document.getElementById(
+      "morningWeekCount"
+    );
+
+
+  if (countElement) {
+
+    countElement.textContent =
+      count === 1
+        ? "1 séance"
+        : count + " séances";
+  }
+
+
+  const summary =
+    document.getElementById(
+      "morningWeekSummary"
+    );
+
+
+  if (summary) {
+
+    if (count === 0) {
+
+      summary.textContent =
+        "Aucune séance cette semaine";
+
+    } else {
+
+      summary.textContent =
+        count +
+        " jour" +
+        (count > 1 ? "s" : "") +
+        " actif" +
+        (count > 1 ? "s" : "") +
+        " • " +
+        morningFormatTotal(totalDuration) +
+        " d'entraînement";
+    }
+  }
+}
+
+
+/* =========================================================
+   SÉRIE DE JOURS CONSÉCUTIFS
+========================================================= */
+
+function getMorningStreak(sessions) {
+
+  const days =
+    [
+      ...new Set(
+        sessions.map(session =>
+          morningDateKey(session.date)
+        )
+      )
+    ]
+    .map(date =>
+      new Date(date + "T12:00:00")
+    )
+    .sort((a, b) => b - a);
+
+
+  if (!days.length) {
+    return 0;
+  }
+
+
+  const today =
+    new Date();
+
+  today.setHours(12, 0, 0, 0);
+
+
+  const yesterday =
+    new Date(today);
+
+  yesterday.setDate(
+    yesterday.getDate() - 1
+  );
+
+
+  const last =
+    morningDateKey(days[0]);
+
+
+  if (
+    last !== morningDateKey(today) &&
+    last !== morningDateKey(yesterday)
+  ) {
+    return 0;
+  }
+
+
+  let streak = 1;
+
+
+  for (let i = 1; i < days.length; i++) {
+
+    const diff =
+      Math.round(
+        (days[i - 1] - days[i]) /
+        86400000
+      );
+
+
+    if (diff === 1) {
+
+      streak++;
+
+    } else {
+
+      break;
+    }
+  }
+
+
+  return streak;
+}
+
+
+/* =========================================================
+   MESSAGE VARIABLE
+========================================================= */
+
+function morningRandomMessage(messages) {
+
+  const date =
+    new Date();
+
+  const index =
+    (
+      date.getDate() +
+      date.getMonth()
+    ) %
+    messages.length;
+
+
+  return messages[index];
+}
+
+
+/* =========================================================
+   MA DYNAMIQUE
+========================================================= */
+
+function renderMorningDynamic(sessions) {
+
+  const icon =
+    document.getElementById(
+      "morningDynamicIcon"
+    );
+
+  const title =
+    document.getElementById(
+      "morningDynamicTitle"
+    );
+
+  const text =
+    document.getElementById(
+      "morningDynamicText"
+    );
+
+
+  if (!icon || !title || !text) {
+    return;
+  }
+
+
+  if (!sessions.length) {
+
+    icon.textContent = "🌱";
+
+    title.textContent =
+      "On commence";
+
+    text.textContent =
+      "Ta prochaine séance apparaîtra ici.";
+
+    return;
+  }
+
+
+  const streak =
+    getMorningStreak(sessions);
+
+
+  if (streak >= 5) {
+
+    icon.textContent = "🏆";
+
+    title.textContent =
+      streak + " jours de suite";
+
+    text.textContent =
+      morningRandomMessage([
+        "Ta routine est vraiment en train de s'installer.",
+        "Belle régularité. Continue sur cette lancée.",
+        "Ces petites séances répétées commencent à compter.",
+        "Tu construis une vraie habitude."
+      ]);
+
+    return;
+  }
+
+
+  if (streak >= 2) {
+
+    icon.textContent = "🔥";
+
+    title.textContent =
+      "Bonne dynamique";
+
+    text.textContent =
+      morningRandomMessage([
+        streak + " matins de suite. Continue comme ça !",
+        streak + " jours consécutifs. La dynamique est bonne.",
+        streak + " matins actifs. La régularité s'installe.",
+        streak + " séances d'affilée avant le travail. Beau rythme."
+      ]);
+
+    return;
+  }
+
+
+  const lastSession =
+    sessions[sessions.length - 1];
+
+
+  if (
+    morningDateKey(lastSession.date) ===
+    morningDateKey(new Date())
+  ) {
+
+    icon.textContent = "✅";
+
+    title.textContent =
+      "Séance faite";
+
+    text.textContent =
+      morningRandomMessage([
+        "Séance du matin validée.",
+        "Encore un matin où tu as pris le temps de bouger.",
+        "Petit entraînement terminé avant le travail.",
+        "Une séance de plus dans ta routine."
+      ]);
+
+  } else {
+
+    icon.textContent = "🌱";
+
+    title.textContent =
+      "On continue";
+
+    text.textContent =
+      morningRandomMessage([
+        "Une nouvelle séance suffit pour relancer la dynamique.",
+        "La régularité se construit séance après séance.",
+        "Pas besoin d'être parfait. Il suffit de revenir.",
+        "La prochaine séance relancera la série."
+      ]);
+  }
+}
+
+
+/* =========================================================
+   COURBE
+========================================================= */
+
+function renderMorningChart(sessions) {
+
+  const chart =
+    document.getElementById(
+      "morningChart"
+    );
+
+
+  if (!chart) {
+    return;
+  }
+
+
+  const data =
+    sessions.slice(-7);
+
+
+  if (data.length < 2) {
+
+    chart.innerHTML =
+      '<div class="morning-chart-empty">' +
+      "Il faut au moins deux séances pour afficher la courbe." +
+      "</div>";
+
+    return;
+  }
+
+
+  const width = 320;
+  const height = 170;
+
+  const left = 20;
+  const right = 20;
+  const top = 25;
+  const bottom = 35;
+
+
+  const durations =
+    data.map(session =>
+      session.duration
+    );
+
+
+  let min =
+    Math.min(...durations);
+
+  let max =
+    Math.max(...durations);
+
+
+  if (min === max) {
+    min -= 60;
+    max += 60;
+  }
+
+
+  min =
+    Math.max(0, min - 30);
+
+  max += 30;
+
+
+  const usableWidth =
+    width - left - right;
+
+  const usableHeight =
+    height - top - bottom;
+
+
+  const points =
+    data.map((session, index) => {
+
+      const x =
+        left +
+        (
+          index /
+          (data.length - 1)
+        ) *
+        usableWidth;
+
+
+      const ratio =
+        (
+          session.duration - min
+        ) /
+        (
+          max - min
+        );
+
+
+      const y =
+        top +
+        usableHeight -
+        ratio * usableHeight;
+
+
+      return {
+        x,
+        y,
+        session
+      };
+    });
+
+
+  const polyline =
+    points
+      .map(point =>
+        point.x + "," + point.y
+      )
+      .join(" ");
+
+
+  const labels =
+    points
+      .map(point => {
+
+        const date =
+          new Date(
+            point.session.date
+          );
+
+
+        const dateText =
+          date.toLocaleDateString(
+            "fr-FR",
+            {
+              day: "numeric",
+              month: "short"
+            }
+          );
+
+
+        const minutes =
+          Math.round(
+            point.session.duration / 60
+          );
+
+
+        return `
+          <text
+            x="${point.x}"
+            y="${height - 10}"
+            class="morning-chart-label"
+          >
+            ${dateText}
+          </text>
+
+          <text
+            x="${point.x}"
+            y="${Math.max(12, point.y - 12)}"
+            class="morning-chart-value"
+          >
+            ${minutes} min
+          </text>
+
+          <circle
+            cx="${point.x}"
+            cy="${point.y}"
+            r="5"
+            class="morning-chart-point"
+          />
+        `;
+      })
+      .join("");
+
+
+  chart.innerHTML = `
+
+    <svg
+      viewBox="0 0 ${width} ${height}"
+      preserveAspectRatio="none"
+    >
+
+      <line
+        x1="${left}"
+        x2="${width - right}"
+        y1="${top}"
+        y2="${top}"
+        class="morning-chart-grid"
+      />
+
+      <line
+        x1="${left}"
+        x2="${width - right}"
+        y1="${top + usableHeight / 2}"
+        y2="${top + usableHeight / 2}"
+        class="morning-chart-grid"
+      />
+
+      <line
+        x1="${left}"
+        x2="${width - right}"
+        y1="${top + usableHeight}"
+        y2="${top + usableHeight}"
+        class="morning-chart-grid"
+      />
+
+      <polyline
+        points="${polyline}"
+        class="morning-chart-line"
+      />
+
+      ${labels}
+
+    </svg>
+  `;
+}
+
+
+/* =========================================================
+   TOUT AFFICHER
+========================================================= */
+
+function renderMorningDashboard() {
+
+  const sessions =
+    getMorningSessions();
+
+  renderMorningDynamic(sessions);
+
+  renderMorningWeek(sessions);
+
+  renderMorningChart(sessions);
+}
+
+
+/* =========================================================
+   LANCEMENT
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  renderMorningDashboard
+);
+
+
+
+
+
