@@ -4241,8 +4241,9 @@ function renderMorningDashboard() {
   renderMorningWeek(sessions);
 
   renderMorningChart(sessions);
-}
 
+  renderMorningRecords(sessions);
+}
 
 /* =========================================================
    LANCEMENT
