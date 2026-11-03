@@ -433,6 +433,230 @@
          CIRCUIT — CONFIGURATION
     ====================================================== -->
 
+<!-- =====================================================
+     MES ROUTINES
+===================================================== -->
+
+<section class="routines-section">
+
+  <div class="routines-header">
+
+    <div>
+      <span class="routines-kicker">
+        PRÉPARATION RAPIDE
+      </span>
+
+      <h3>
+        Mes routines
+      </h3>
+    </div>
+
+    <button
+      class="routine-add-btn"
+      id="openRoutineCreatorBtn"
+      type="button"
+    >
+      + Nouvelle
+    </button>
+
+  </div>
+
+
+  <!-- LISTE DES ROUTINES -->
+  <div
+    class="routines-list"
+    id="routinesList"
+  >
+
+    <div
+      class="routines-empty"
+      id="routinesEmpty"
+    >
+      Aucune routine enregistrée.
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CRÉATION / MODIFICATION
+  ====================================================== -->
+
+  <div
+    class="routine-editor hidden"
+    id="routineEditor"
+  >
+
+    <div class="routine-editor-header">
+
+      <div>
+
+        <span class="routines-kicker">
+          ROUTINE
+        </span>
+
+        <h3 id="routineEditorTitle">
+          Nouvelle routine
+        </h3>
+
+      </div>
+
+      <button
+        class="routine-close-btn"
+        id="closeRoutineEditorBtn"
+        type="button"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- NOM -->
+    <label class="routine-label">
+      Nom de la routine
+    </label>
+
+    <input
+      class="routine-input"
+      id="routineNameInput"
+      type="text"
+      placeholder="Ex : Routine matin"
+      maxlength="40"
+    >
+
+
+    <!-- NOMBRE DE TOURS -->
+    <label class="routine-label">
+      Nombre de tours
+    </label>
+
+    <div class="routine-stepper">
+
+      <button
+        class="routine-step-btn"
+        id="routineRoundsMinus"
+        type="button"
+      >
+        −
+      </button>
+
+      <strong id="routineRoundsValue">
+        3
+      </strong>
+
+      <button
+        class="routine-step-btn"
+        id="routineRoundsPlus"
+        type="button"
+      >
+        +
+      </button>
+
+    </div>
+
+
+    <!-- EXERCICES -->
+    <div class="routine-exercises-header">
+
+      <div>
+
+        <span class="routines-kicker">
+          EXERCICES
+        </span>
+
+        <h4>
+          Contenu
+        </h4>
+
+      </div>
+
+      <button
+        class="routine-small-btn"
+        id="addRoutineExerciseBtn"
+        type="button"
+      >
+        + Exercice
+      </button>
+
+    </div>
+
+
+    <div
+      class="routine-exercises-list"
+      id="routineExercisesList"
+    >
+    </div>
+
+
+    <!-- BOUTONS -->
+    <div class="routine-editor-actions">
+
+      <button
+        class="routine-cancel-btn"
+        id="cancelRoutineBtn"
+        type="button"
+      >
+        Annuler
+      </button>
+
+      <button
+        class="routine-save-btn"
+        id="saveRoutineBtn"
+        type="button"
+      >
+        Enregistrer
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ROUTINE SÉLECTIONNÉE
+  ====================================================== -->
+
+  <div
+    class="routine-selected hidden"
+    id="routineSelected"
+  >
+
+    <span class="routines-kicker">
+      ROUTINE CHOISIE
+    </span>
+
+    <h3 id="selectedRoutineName">
+      Routine matin
+    </h3>
+
+    <div
+      class="selected-routine-info"
+      id="selectedRoutineInfo"
+    >
+    </div>
+
+    <div
+      class="selected-routine-exercises"
+      id="selectedRoutineExercises"
+    >
+    </div>
+
+    <button
+      class="routine-use-btn"
+      id="useRoutineBtn"
+      type="button"
+    >
+      Utiliser cette routine
+    </button>
+
+  </div>
+
+</section>
+
+
+
+    
     <section
       class="screen"
       id="circuitSetupScreen"
