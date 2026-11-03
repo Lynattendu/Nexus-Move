@@ -2637,4 +2637,58 @@ input[type="number"] {
   font-size: 12px;
 }
 
+/* =========================================================
+   MES RECORDS
+========================================================= */
+
+.morning-records-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.morning-record-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 115px;
+
+  padding: 16px;
+
+  background: rgba(12, 30, 48, 0.60);
+
+  border: 1px solid rgba(117, 157, 192, 0.16);
+
+  border-radius: 20px;
+
+  text-align: center;
+}
+
+.morning-record-icon {
+  font-size: 22px;
+  margin-bottom: 7px;
+}
+
+.morning-record-card strong {
+  color: #ffffff;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  margin-bottom: 4px;
+}
+
+.morning-record-card > span:last-child {
+  color: #7f94ad;
+
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+
+
+
+
 
