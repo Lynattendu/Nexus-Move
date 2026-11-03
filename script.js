@@ -6307,3 +6307,553 @@ function formatRoutineProgressTime(seconds) {
   );
 
 }
+
+/* =========================================================
+   NEXUS MOVE — BILAN APRÈS SÉANCE
+========================================================= */
+
+let workoutFeedbackFeeling = null;
+
+let workoutFeedbackEnergy = null;
+
+let workoutFeedbackHasPain = null;
+
+let workoutFeedbackPainLocations = [];
+
+
+/* =========================================================
+   ÉLÉMENTS
+========================================================= */
+
+const workoutFeedbackOverlay =
+  document.getElementById(
+    "workoutFeedbackOverlay"
+  );
+
+const feedbackPainLocations =
+  document.getElementById(
+    "feedbackPainLocations"
+  );
+
+const feedbackOtherPain =
+  document.getElementById(
+    "feedbackOtherPain"
+  );
+
+
+/* =========================================================
+   OUVRIR LE BILAN
+========================================================= */
+
+function openWorkoutFeedback() {
+
+  workoutFeedbackFeeling = null;
+
+  workoutFeedbackEnergy = null;
+
+  workoutFeedbackHasPain = null;
+
+  workoutFeedbackPainLocations = [];
+
+
+  document
+    .querySelectorAll(
+      ".feedback-choice-btn, " +
+      ".feedback-pain-btn, " +
+      ".feedback-energy-row button, " +
+      ".pain-location-grid button"
+    )
+    .forEach(button => {
+
+      button.classList.remove(
+        "selected"
+      );
+
+    });
+
+
+  if (feedbackPainLocations) {
+
+    feedbackPainLocations.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  if (feedbackOtherPain) {
+
+    feedbackOtherPain.value = "";
+
+  }
+
+
+  if (workoutFeedbackOverlay) {
+
+    workoutFeedbackOverlay.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RESSENTI
+========================================================= */
+
+document
+  .querySelectorAll(
+    "[data-feeling]"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(
+            "[data-feeling]"
+          )
+          .forEach(item =>
+            item.classList.remove(
+              "selected"
+            )
+          );
+
+
+        button.classList.add(
+          "selected"
+        );
+
+
+        workoutFeedbackFeeling =
+          button.dataset.feeling;
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   ÉNERGIE
+========================================================= */
+
+document
+  .querySelectorAll(
+    "[data-energy]"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(
+            "[data-energy]"
+          )
+          .forEach(item =>
+            item.classList.remove(
+              "selected"
+            )
+          );
+
+
+        button.classList.add(
+          "selected"
+        );
+
+
+        workoutFeedbackEnergy =
+          Number(
+            button.dataset.energy
+          );
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   DOULEUR NON
+========================================================= */
+
+const feedbackPainNo =
+  document.getElementById(
+    "feedbackPainNo"
+  );
+
+
+if (feedbackPainNo) {
+
+  feedbackPainNo.addEventListener(
+    "click",
+    () => {
+
+      workoutFeedbackHasPain =
+        false;
+
+
+      workoutFeedbackPainLocations =
+        [];
+
+
+      feedbackPainNo.classList.add(
+        "selected"
+      );
+
+
+      const yes =
+        document.getElementById(
+          "feedbackPainYes"
+        );
+
+
+      if (yes) {
+
+        yes.classList.remove(
+          "selected"
+        );
+
+      }
+
+
+      if (feedbackPainLocations) {
+
+        feedbackPainLocations.classList.add(
+          "hidden"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DOULEUR OUI
+========================================================= */
+
+const feedbackPainYes =
+  document.getElementById(
+    "feedbackPainYes"
+  );
+
+
+if (feedbackPainYes) {
+
+  feedbackPainYes.addEventListener(
+    "click",
+    () => {
+
+      workoutFeedbackHasPain =
+        true;
+
+
+      feedbackPainYes.classList.add(
+        "selected"
+      );
+
+
+      if (feedbackPainNo) {
+
+        feedbackPainNo.classList.remove(
+          "selected"
+        );
+
+      }
+
+
+      if (feedbackPainLocations) {
+
+        feedbackPainLocations.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ZONES DE DOULEUR
+========================================================= */
+
+document
+  .querySelectorAll(
+    "[data-location]"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        const location =
+          button.dataset.location;
+
+
+        if (
+          workoutFeedbackPainLocations
+            .includes(location)
+        ) {
+
+          workoutFeedbackPainLocations =
+            workoutFeedbackPainLocations
+              .filter(item =>
+                item !== location
+              );
+
+
+          button.classList.remove(
+            "selected"
+          );
+
+        } else {
+
+          workoutFeedbackPainLocations
+            .push(location);
+
+
+          button.classList.add(
+            "selected"
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   ENREGISTRER LE BILAN
+========================================================= */
+
+function saveWorkoutFeedback() {
+
+  if (!workoutFeedbackFeeling) {
+
+    alert(
+      "Indique ton ressenti."
+    );
+
+    return;
+
+  }
+
+
+  if (!workoutFeedbackEnergy) {
+
+    alert(
+      "Indique ton niveau d'énergie."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    workoutFeedbackHasPain === null
+  ) {
+
+    alert(
+      "Indique si tu as une douleur."
+    );
+
+    return;
+
+  }
+
+
+  let painLocations =
+    [
+      ...workoutFeedbackPainLocations
+    ];
+
+
+  if (
+    workoutFeedbackHasPain &&
+    feedbackOtherPain &&
+    feedbackOtherPain.value.trim()
+  ) {
+
+    painLocations.push(
+      feedbackOtherPain
+        .value
+        .trim()
+    );
+
+  }
+
+
+  if (
+    workoutFeedbackHasPain &&
+    painLocations.length === 0
+  ) {
+
+    alert(
+      "Indique où se trouve la douleur."
+    );
+
+    return;
+
+  }
+
+
+  let history = [];
+
+
+  try {
+
+    history =
+      JSON.parse(
+        localStorage.getItem(
+          "nexusMoveHistory"
+        )
+      ) || [];
+
+  } catch (error) {
+
+    history = [];
+
+  }
+
+
+  if (!history.length) {
+
+    alert(
+      "Aucune séance trouvée."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    On cherche la séance la plus récente.
+  */
+
+  let latestIndex = 0;
+
+  let latestTime = 0;
+
+
+  history.forEach(
+    (session, index) => {
+
+      const time =
+        new Date(
+          session.date
+        ).getTime();
+
+
+      if (time > latestTime) {
+
+        latestTime = time;
+
+        latestIndex = index;
+
+      }
+
+    }
+  );
+
+
+  /* =====================================================
+     DONNÉES POUR HEDA BO
+  ===================================================== */
+
+  history[latestIndex].feedback = {
+
+    feeling:
+      workoutFeedbackFeeling,
+
+    energy:
+      workoutFeedbackEnergy,
+
+    pain: {
+
+      hasPain:
+        workoutFeedbackHasPain,
+
+      locations:
+        workoutFeedbackHasPain
+          ? painLocations
+          : []
+
+    },
+
+    recordedAt:
+      new Date()
+        .toISOString()
+
+  };
+
+
+  localStorage.setItem(
+    "nexusMoveHistory",
+    JSON.stringify(history)
+  );
+
+
+  if (workoutFeedbackOverlay) {
+
+    workoutFeedbackOverlay.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  /*
+    Rafraîchit l'historique si la fonction existe.
+  */
+
+  if (
+    typeof renderHistory ===
+    "function"
+  ) {
+
+    renderHistory();
+
+  }
+
+}
+
+
+/* =========================================================
+   BOUTON ENREGISTRER
+========================================================= */
+
+const saveWorkoutFeedbackBtn =
+  document.getElementById(
+    "saveWorkoutFeedbackBtn"
+  );
+
+
+if (saveWorkoutFeedbackBtn) {
+
+  saveWorkoutFeedbackBtn.addEventListener(
+    "click",
+    saveWorkoutFeedback
+  );
+
+}
+
+
+
+
