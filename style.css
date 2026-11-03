@@ -2687,6 +2687,564 @@ input[type="number"] {
   line-height: 1.3;
 }
 
+/* =========================================================
+   MES ROUTINES
+========================================================= */
+
+.routines-section {
+  margin: 28px 0 34px;
+}
+
+.routines-header,
+.routine-editor-header,
+.routine-exercises-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.routines-kicker {
+  display: block;
+
+  color: #22e6f2;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 2.5px;
+
+  margin-bottom: 5px;
+}
+
+.routines-header h3,
+.routine-editor-header h3,
+.routine-selected h3 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 22px;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   BOUTONS
+========================================================= */
+
+.routine-add-btn,
+.routine-small-btn {
+
+  border: 1px solid rgba(34, 230, 242, 0.35);
+
+  background: rgba(34, 230, 242, 0.10);
+
+  color: #22e6f2;
+
+  border-radius: 14px;
+
+  min-height: 42px;
+
+  padding: 0 14px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+.routine-close-btn {
+
+  width: 42px;
+  height: 42px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  color: #ffffff;
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   LISTE
+========================================================= */
+
+.routines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.routines-empty {
+
+  padding: 22px;
+
+  text-align: center;
+
+  color: #70869f;
+
+  background: rgba(12, 30, 48, 0.55);
+
+  border: 1px solid rgba(117, 157, 192, 0.14);
+
+  border-radius: 18px;
+}
+
+
+.routine-card {
+
+  padding: 17px;
+
+  background: rgba(12, 30, 48, 0.68);
+
+  border: 1px solid rgba(117, 157, 192, 0.17);
+
+  border-radius: 20px;
+}
+
+
+.routine-card-top {
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 15px;
+}
+
+
+.routine-card-name {
+
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 850;
+}
+
+
+.routine-card-meta {
+
+  margin-top: 5px;
+
+  color: #7f94ad;
+
+  font-size: 13px;
+}
+
+
+.routine-card-actions {
+
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+
+.routine-card-btn {
+
+  flex: 1;
+
+  min-height: 42px;
+
+  border: 0;
+
+  border-radius: 13px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+.routine-card-btn.select {
+
+  background: #22dce8;
+
+  color: #04151d;
+}
+
+
+.routine-card-btn.edit {
+
+  background: rgba(255, 255, 255, 0.07);
+
+  color: #dce8f3;
+}
+
+
+.routine-card-btn.delete {
+
+  flex: 0 0 45px;
+
+  background: rgba(255, 90, 90, 0.10);
+
+  color: #ff8d8d;
+}
+
+
+/* =========================================================
+   ÉDITEUR
+========================================================= */
+
+.routine-editor {
+
+  margin-top: 20px;
+
+  padding: 20px;
+
+  background: rgba(9, 26, 42, 0.96);
+
+  border: 1px solid rgba(34, 230, 242, 0.22);
+
+  border-radius: 22px;
+}
+
+
+.routine-label {
+
+  display: block;
+
+  margin: 18px 0 8px;
+
+  color: #91a5ba;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.routine-input {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  min-height: 48px;
+
+  padding: 0 14px;
+
+  border: 1px solid rgba(117, 157, 192, 0.20);
+
+  border-radius: 14px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #ffffff;
+
+  font-size: 16px;
+}
+
+
+.routine-input:focus {
+
+  border-color: #22dce8;
+}
+
+
+/* =========================================================
+   TOURS
+========================================================= */
+
+.routine-stepper {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  max-width: 180px;
+
+  padding: 8px;
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(117, 157, 192, 0.15);
+}
+
+
+.routine-stepper strong {
+
+  color: #ffffff;
+
+  font-size: 20px;
+}
+
+
+.routine-step-btn {
+
+  width: 42px;
+  height: 42px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  background: rgba(34, 220, 232, 0.13);
+
+  color: #22e6f2;
+
+  font-size: 24px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   EXERCICES
+========================================================= */
+
+.routine-exercises-header {
+
+  margin-top: 28px;
+}
+
+
+.routine-exercises-header h4 {
+
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 18px;
+}
+
+
+.routine-exercises-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.routine-exercise-row {
+
+  display: grid;
+
+  grid-template-columns: 1fr 85px 42px;
+
+  gap: 8px;
+
+  align-items: center;
+}
+
+
+.routine-exercise-name,
+.routine-exercise-reps {
+
+  width: 100%;
+
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  min-height: 45px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(117, 157, 192, 0.17);
+
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #ffffff;
+
+  font-size: 16px;
+}
+
+
+.routine-exercise-remove {
+
+  width: 42px;
+  height: 42px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  background: rgba(255, 90, 90, 0.10);
+
+  color: #ff8d8d;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ACTIONS ÉDITEUR
+========================================================= */
+
+.routine-editor-actions {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+
+.routine-cancel-btn,
+.routine-save-btn {
+
+  min-height: 48px;
+
+  border: 0;
+
+  border-radius: 15px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+
+.routine-cancel-btn {
+
+  background: rgba(255, 255, 255, 0.06);
+
+  color: #c5d3df;
+}
+
+
+.routine-save-btn {
+
+  background: #22dce8;
+
+  color: #04151d;
+}
+
+
+/* =========================================================
+   ROUTINE CHOISIE
+========================================================= */
+
+.routine-selected {
+
+  margin-top: 20px;
+
+  padding: 20px;
+
+  border: 1px solid rgba(34, 230, 242, 0.25);
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34, 220, 232, 0.10),
+      rgba(8, 26, 42, 0.75)
+    );
+}
+
+
+.selected-routine-info {
+
+  margin-top: 8px;
+
+  color: #8fa4ba;
+
+  font-size: 13px;
+}
+
+
+.selected-routine-exercises {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 17px;
+}
+
+
+.selected-routine-exercise {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 10px 12px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #d7e4ee;
+
+  font-size: 14px;
+}
+
+
+.selected-routine-exercise strong {
+
+  color: #22e6f2;
+}
+
+
+.routine-use-btn {
+
+  width: 100%;
+
+  min-height: 50px;
+
+  margin-top: 18px;
+
+  border: 0;
+
+  border-radius: 15px;
+
+  background: #22dce8;
+
+  color: #04151d;
+
+  font-size: 15px;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   UTILITAIRE
+========================================================= */
+
+.routines-section .hidden {
+
+  display: none !important;
+}
+
+
+
 
 
 
