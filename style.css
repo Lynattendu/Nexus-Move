@@ -2426,6 +2426,215 @@ input[type="number"] {
 
 }
 
+/* =========================================================
+   HISTORIQUE — SPORT DU MATIN
+========================================================= */
 
+.morning-dashboard {
+  margin-bottom: 32px;
+}
+
+.morning-dynamic-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 28px;
+  background: linear-gradient(
+    135deg,
+    rgba(21, 231, 244, 0.10),
+    rgba(12, 35, 57, 0.75)
+  );
+  border: 1px solid rgba(66, 219, 234, 0.22);
+  border-radius: 22px;
+}
+
+.morning-dynamic-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  font-size: 27px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+}
+
+.morning-dynamic-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.morning-dynamic-text {
+  color: #9daec4;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.morning-section {
+  margin-bottom: 32px;
+}
+
+.morning-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.morning-small-title {
+  color: #22e6f2;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  margin-bottom: 7px;
+}
+
+.morning-section h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 850;
+}
+
+.morning-week-count {
+  color: #7d90aa;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.morning-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding: 20px 12px;
+  background: rgba(12, 30, 48, 0.60);
+  border: 1px solid rgba(117, 157, 192, 0.16);
+  border-radius: 22px;
+}
+
+.morning-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.morning-day span {
+  color: #778ba5;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.morning-day-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(110, 133, 159, 0.12);
+  border: 1px solid rgba(110, 133, 159, 0.22);
+}
+
+.morning-day-dot.active {
+  background: #22dce8;
+  border-color: #22dce8;
+  box-shadow: 0 0 14px rgba(34, 220, 232, 0.32);
+}
+
+.morning-day-dot.today {
+  transform: scale(1.16);
+}
+
+.morning-day-dot.today:not(.active) {
+  border: 2px solid #22dce8;
+}
+
+.morning-week-summary {
+  margin-top: 13px;
+  text-align: center;
+  color: #879bb4;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.morning-chart-wrapper {
+  width: 100%;
+  padding: 20px 12px 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: rgba(12, 30, 48, 0.60);
+  border: 1px solid rgba(117, 157, 192, 0.16);
+  border-radius: 22px;
+}
+
+.morning-chart {
+  position: relative;
+  width: 100%;
+  height: 190px;
+}
+
+.morning-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.morning-chart-line {
+  fill: none;
+  stroke: #25deeb;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.morning-chart-area {
+  fill: url(#morningChartGradient);
+}
+
+.morning-chart-point {
+  fill: #071521;
+  stroke: #25deeb;
+  stroke-width: 3;
+}
+
+.morning-chart-grid {
+  stroke: rgba(130, 155, 183, 0.10);
+  stroke-width: 1;
+}
+
+.morning-chart-label {
+  fill: #71869f;
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.morning-chart-value {
+  fill: #a3b5ca;
+  font-size: 9px;
+  text-anchor: middle;
+}
+
+.morning-chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  color: #7589a3;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.morning-chart-note {
+  margin-top: 10px;
+  color: #667b94;
+  text-align: center;
+  font-size: 12px;
+}
 
 
