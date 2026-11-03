@@ -1729,7 +1729,247 @@
   >
   </div>
 
+<!-- =====================================================
+     BILAN APRÈS SÉANCE
+===================================================== -->
 
+<div
+  class="workout-feedback-overlay hidden"
+  id="workoutFeedbackOverlay"
+>
+
+  <div class="workout-feedback-card">
+
+    <div class="feedback-header">
+
+      <div>
+        <span class="feedback-kicker">
+          SÉANCE TERMINÉE
+        </span>
+
+        <h2>
+          Comment ça s'est passé ?
+        </h2>
+      </div>
+
+    </div>
+
+
+    <!-- RESSENTI -->
+
+    <div class="feedback-section">
+
+      <h3>
+        Ressenti
+      </h3>
+
+      <div
+        class="feedback-choice-row"
+        id="feedbackFeelingChoices"
+      >
+
+        <button
+          type="button"
+          class="feedback-choice-btn"
+          data-feeling="Facile"
+        >
+          Facile
+        </button>
+
+        <button
+          type="button"
+          class="feedback-choice-btn"
+          data-feeling="Bien"
+        >
+          Bien
+        </button>
+
+        <button
+          type="button"
+          class="feedback-choice-btn"
+          data-feeling="Difficile"
+        >
+          Difficile
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ÉNERGIE -->
+
+    <div class="feedback-section">
+
+      <h3>
+        Énergie
+      </h3>
+
+      <div
+        class="feedback-energy-row"
+        id="feedbackEnergyChoices"
+      >
+
+        <button type="button" data-energy="1">1</button>
+        <button type="button" data-energy="2">2</button>
+        <button type="button" data-energy="3">3</button>
+        <button type="button" data-energy="4">4</button>
+        <button type="button" data-energy="5">5</button>
+
+      </div>
+
+      <div class="feedback-energy-labels">
+        <span>Très basse</span>
+        <span>Excellente</span>
+      </div>
+
+    </div>
+
+
+    <!-- DOULEUR -->
+
+    <div class="feedback-section">
+
+      <h3>
+        Douleur ?
+      </h3>
+
+      <div class="feedback-choice-row">
+
+        <button
+          type="button"
+          class="feedback-pain-btn"
+          id="feedbackPainNo"
+        >
+          Non
+        </button>
+
+        <button
+          type="button"
+          class="feedback-pain-btn"
+          id="feedbackPainYes"
+        >
+          Oui
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ZONES DE DOULEUR -->
+
+    <div
+      class="feedback-pain-locations hidden"
+      id="feedbackPainLocations"
+    >
+
+      <h3>
+        Où as-tu mal ?
+      </h3>
+
+      <p>
+        Tu peux choisir plusieurs zones.
+      </p>
+
+
+      <div class="pain-location-grid">
+
+        <button type="button" data-location="Épaule gauche">
+          Épaule G
+        </button>
+
+        <button type="button" data-location="Épaule droite">
+          Épaule D
+        </button>
+
+        <button type="button" data-location="Bras gauche">
+          Bras G
+        </button>
+
+        <button type="button" data-location="Bras droit">
+          Bras D
+        </button>
+
+        <button type="button" data-location="Coude gauche">
+          Coude G
+        </button>
+
+        <button type="button" data-location="Coude droit">
+          Coude D
+        </button>
+
+        <button type="button" data-location="Poignet gauche">
+          Poignet G
+        </button>
+
+        <button type="button" data-location="Poignet droit">
+          Poignet D
+        </button>
+
+        <button type="button" data-location="Haut du dos">
+          Haut du dos
+        </button>
+
+        <button type="button" data-location="Lombaires">
+          Lombaires
+        </button>
+
+        <button type="button" data-location="Hanche gauche">
+          Hanche G
+        </button>
+
+        <button type="button" data-location="Hanche droite">
+          Hanche D
+        </button>
+
+        <button type="button" data-location="Genou gauche">
+          Genou G
+        </button>
+
+        <button type="button" data-location="Genou droit">
+          Genou D
+        </button>
+
+        <button type="button" data-location="Cheville gauche">
+          Cheville G
+        </button>
+
+        <button type="button" data-location="Cheville droite">
+          Cheville D
+        </button>
+
+      </div>
+
+
+      <label class="feedback-other-label">
+        Autre zone
+      </label>
+
+      <input
+        type="text"
+        id="feedbackOtherPain"
+        class="feedback-other-input"
+        placeholder="Ex : nuque, mollet gauche..."
+        maxlength="60"
+      >
+
+    </div>
+
+
+    <!-- ENREGISTRER -->
+
+    <button
+      type="button"
+      class="feedback-save-btn"
+      id="saveWorkoutFeedbackBtn"
+    >
+      Enregistrer mon ressenti
+    </button>
+
+  </div>
+
+</div>
 
   <!-- =====================================================
        JAVASCRIPT
