@@ -4255,6 +4255,1144 @@ document.addEventListener(
 );
 
 
+/* =========================================================
+   NEXUS MOVE — MES ROUTINES
+========================================================= */
 
+const ROUTINES_STORAGE_KEY =
+  "nexusMoveRoutines";
+
+
+let nexusRoutines = [];
+
+let routineEditingId = null;
+
+let routineRounds = 3;
+
+let selectedRoutineId = null;
+
+
+/* =========================================================
+   ÉLÉMENTS
+========================================================= */
+
+const routinesList =
+  document.getElementById(
+    "routinesList"
+  );
+
+const routinesEmpty =
+  document.getElementById(
+    "routinesEmpty"
+  );
+
+const routineEditor =
+  document.getElementById(
+    "routineEditor"
+  );
+
+const routineEditorTitle =
+  document.getElementById(
+    "routineEditorTitle"
+  );
+
+const routineNameInput =
+  document.getElementById(
+    "routineNameInput"
+  );
+
+const routineRoundsValue =
+  document.getElementById(
+    "routineRoundsValue"
+  );
+
+const routineExercisesList =
+  document.getElementById(
+    "routineExercisesList"
+  );
+
+const routineSelected =
+  document.getElementById(
+    "routineSelected"
+  );
+
+const selectedRoutineName =
+  document.getElementById(
+    "selectedRoutineName"
+  );
+
+const selectedRoutineInfo =
+  document.getElementById(
+    "selectedRoutineInfo"
+  );
+
+const selectedRoutineExercises =
+  document.getElementById(
+    "selectedRoutineExercises"
+  );
+
+
+/* =========================================================
+   CHARGEMENT
+========================================================= */
+
+function loadNexusRoutines() {
+
+  try {
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(
+          ROUTINES_STORAGE_KEY
+        )
+      );
+
+    nexusRoutines =
+      Array.isArray(saved)
+        ? saved
+        : [];
+
+  } catch (error) {
+
+    nexusRoutines = [];
+
+  }
+
+}
+
+
+/* =========================================================
+   SAUVEGARDE
+========================================================= */
+
+function saveNexusRoutines() {
+
+  localStorage.setItem(
+    ROUTINES_STORAGE_KEY,
+    JSON.stringify(nexusRoutines)
+  );
+
+}
+
+
+/* =========================================================
+   ID
+========================================================= */
+
+function createRoutineId() {
+
+  return (
+    "routine-" +
+    Date.now() +
+    "-" +
+    Math.floor(
+      Math.random() * 10000
+    )
+  );
+
+}
+
+
+/* =========================================================
+   AFFICHER LES ROUTINES
+========================================================= */
+
+function renderNexusRoutines() {
+
+  if (!routinesList) {
+    return;
+  }
+
+
+  routinesList
+    .querySelectorAll(
+      ".routine-card"
+    )
+    .forEach(card =>
+      card.remove()
+    );
+
+
+  if (!nexusRoutines.length) {
+
+    if (routinesEmpty) {
+
+      routinesEmpty.classList.remove(
+        "hidden"
+      );
+
+    }
+
+    return;
+
+  }
+
+
+  if (routinesEmpty) {
+
+    routinesEmpty.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  nexusRoutines.forEach(routine => {
+
+    const card =
+      document.createElement(
+        "div"
+      );
+
+    card.className =
+      "routine-card";
+
+
+    const exerciseCount =
+      routine.exercises.length;
+
+
+    card.innerHTML = `
+
+      <div class="routine-card-top">
+
+        <div>
+
+          <div class="routine-card-name">
+            ${escapeRoutineText(
+              routine.name
+            )}
+          </div>
+
+          <div class="routine-card-meta">
+
+            ${routine.rounds}
+            tour${
+              routine.rounds > 1
+                ? "s"
+                : ""
+            }
+
+            •
+
+            ${exerciseCount}
+            exercice${
+              exerciseCount > 1
+                ? "s"
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="routine-card-actions">
+
+        <button
+          class="routine-card-btn select"
+          type="button"
+        >
+          Choisir
+        </button>
+
+        <button
+          class="routine-card-btn edit"
+          type="button"
+        >
+          Modifier
+        </button>
+
+        <button
+          class="routine-card-btn delete"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+    `;
+
+
+    card
+      .querySelector(
+        ".select"
+      )
+      .addEventListener(
+        "click",
+        () =>
+          selectNexusRoutine(
+            routine.id
+          )
+      );
+
+
+    card
+      .querySelector(
+        ".edit"
+      )
+      .addEventListener(
+        "click",
+        () =>
+          editNexusRoutine(
+            routine.id
+          )
+      );
+
+
+    card
+      .querySelector(
+        ".delete"
+      )
+      .addEventListener(
+        "click",
+        () =>
+          deleteNexusRoutine(
+            routine.id
+          )
+      );
+
+
+    routinesList.appendChild(
+      card
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   ÉCHAPPER TEXTE
+========================================================= */
+
+function escapeRoutineText(value) {
+
+  return String(value)
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   OUVRIR L'ÉDITEUR
+========================================================= */
+
+function openNewRoutineEditor() {
+
+  routineEditingId = null;
+
+  routineRounds = 3;
+
+
+  if (routineEditorTitle) {
+
+    routineEditorTitle.textContent =
+      "Nouvelle routine";
+
+  }
+
+
+  if (routineNameInput) {
+
+    routineNameInput.value = "";
+
+  }
+
+
+  updateRoutineRounds();
+
+
+  if (routineExercisesList) {
+
+    routineExercisesList.innerHTML =
+      "";
+
+  }
+
+
+  /*
+    On crée directement
+    5 lignes pour ta routine du matin.
+  */
+
+  addRoutineExercise(
+    "Squat",
+    10
+  );
+
+  addRoutineExercise(
+    "Pompes",
+    10
+  );
+
+  addRoutineExercise(
+    "Abdos côté",
+    10
+  );
+
+  addRoutineExercise(
+    "Squat côté",
+    10
+  );
+
+  addRoutineExercise(
+    "Bras au sol / bras levé",
+    10
+  );
+
+
+  if (routineEditor) {
+
+    routineEditor.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FERMER ÉDITEUR
+========================================================= */
+
+function closeRoutineEditor() {
+
+  if (routineEditor) {
+
+    routineEditor.classList.add(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   AJOUTER EXERCICE
+========================================================= */
+
+function addRoutineExercise(
+  name = "",
+  reps = 10
+) {
+
+  if (!routineExercisesList) {
+    return;
+  }
+
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "routine-exercise-row";
+
+
+  row.innerHTML = `
+
+    <input
+      class="routine-exercise-name"
+      type="text"
+      maxlength="50"
+      placeholder="Exercice"
+      value="${escapeRoutineText(name)}"
+    >
+
+    <input
+      class="routine-exercise-reps"
+      type="number"
+      min="1"
+      max="999"
+      value="${Number(reps) || 10}"
+      aria-label="Répétitions"
+    >
+
+    <button
+      class="routine-exercise-remove"
+      type="button"
+      aria-label="Supprimer l'exercice"
+    >
+      ×
+    </button>
+
+  `;
+
+
+  row
+    .querySelector(
+      ".routine-exercise-remove"
+    )
+    .addEventListener(
+      "click",
+      () =>
+        row.remove()
+    );
+
+
+  routineExercisesList.appendChild(
+    row
+  );
+
+}
+
+
+/* =========================================================
+   TOURS
+========================================================= */
+
+function updateRoutineRounds() {
+
+  routineRounds =
+    Math.max(
+      1,
+      Math.min(
+        20,
+        routineRounds
+      )
+    );
+
+
+  if (routineRoundsValue) {
+
+    routineRoundsValue.textContent =
+      routineRounds;
+
+  }
+
+}
+
+
+/* =========================================================
+   ENREGISTRER
+========================================================= */
+
+function saveRoutineFromEditor() {
+
+  if (!routineNameInput) {
+    return;
+  }
+
+
+  const name =
+    routineNameInput
+      .value
+      .trim();
+
+
+  if (!name) {
+
+    alert(
+      "Donne un nom à la routine."
+    );
+
+    return;
+
+  }
+
+
+  const rows =
+    routineExercisesList
+      ? [
+          ...routineExercisesList
+            .querySelectorAll(
+              ".routine-exercise-row"
+            )
+        ]
+      : [];
+
+
+  const exercises =
+    rows
+      .map(row => {
+
+        const nameInput =
+          row.querySelector(
+            ".routine-exercise-name"
+          );
+
+        const repsInput =
+          row.querySelector(
+            ".routine-exercise-reps"
+          );
+
+
+        return {
+
+          name:
+            nameInput
+              .value
+              .trim(),
+
+          reps:
+            Math.max(
+              1,
+              Number(
+                repsInput.value
+              ) || 1
+            )
+
+        };
+
+      })
+      .filter(exercise =>
+        exercise.name
+      );
+
+
+  if (!exercises.length) {
+
+    alert(
+      "Ajoute au moins un exercice."
+    );
+
+    return;
+
+  }
+
+
+  if (routineEditingId) {
+
+    const routine =
+      nexusRoutines.find(item =>
+        item.id ===
+        routineEditingId
+      );
+
+
+    if (routine) {
+
+      routine.name =
+        name;
+
+      routine.rounds =
+        routineRounds;
+
+      routine.exercises =
+        exercises;
+
+    }
+
+  } else {
+
+    nexusRoutines.push({
+
+      id:
+        createRoutineId(),
+
+      name,
+
+      rounds:
+        routineRounds,
+
+      exercises,
+
+      createdAt:
+        new Date()
+          .toISOString()
+
+    });
+
+  }
+
+
+  saveNexusRoutines();
+
+  renderNexusRoutines();
+
+  closeRoutineEditor();
+
+}
+
+
+/* =========================================================
+   MODIFIER
+========================================================= */
+
+function editNexusRoutine(id) {
+
+  const routine =
+    nexusRoutines.find(item =>
+      item.id === id
+    );
+
+
+  if (!routine) {
+    return;
+  }
+
+
+  routineEditingId =
+    routine.id;
+
+
+  routineRounds =
+    routine.rounds;
+
+
+  if (routineEditorTitle) {
+
+    routineEditorTitle.textContent =
+      "Modifier la routine";
+
+  }
+
+
+  if (routineNameInput) {
+
+    routineNameInput.value =
+      routine.name;
+
+  }
+
+
+  updateRoutineRounds();
+
+
+  if (routineExercisesList) {
+
+    routineExercisesList.innerHTML =
+      "";
+
+  }
+
+
+  routine.exercises.forEach(
+    exercise => {
+
+      addRoutineExercise(
+        exercise.name,
+        exercise.reps
+      );
+
+    }
+  );
+
+
+  if (routineEditor) {
+
+    routineEditor.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SUPPRIMER
+========================================================= */
+
+function deleteNexusRoutine(id) {
+
+  const routine =
+    nexusRoutines.find(item =>
+      item.id === id
+    );
+
+
+  if (!routine) {
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      'Supprimer "' +
+      routine.name +
+      '" ?'
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  nexusRoutines =
+    nexusRoutines.filter(item =>
+      item.id !== id
+    );
+
+
+  if (
+    selectedRoutineId === id
+  ) {
+
+    selectedRoutineId =
+      null;
+
+
+    if (routineSelected) {
+
+      routineSelected.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+
+
+  saveNexusRoutines();
+
+  renderNexusRoutines();
+
+}
+
+
+/* =========================================================
+   CHOISIR
+========================================================= */
+
+function selectNexusRoutine(id) {
+
+  const routine =
+    nexusRoutines.find(item =>
+      item.id === id
+    );
+
+
+  if (!routine) {
+    return;
+  }
+
+
+  selectedRoutineId =
+    routine.id;
+
+
+  if (selectedRoutineName) {
+
+    selectedRoutineName.textContent =
+      routine.name;
+
+  }
+
+
+  const totalRepsPerRound =
+    routine.exercises.reduce(
+      (total, exercise) =>
+        total +
+        Number(exercise.reps),
+      0
+    );
+
+
+  const totalReps =
+    totalRepsPerRound *
+    routine.rounds;
+
+
+  if (selectedRoutineInfo) {
+
+    selectedRoutineInfo.textContent =
+      routine.rounds +
+      " tours • " +
+      routine.exercises.length +
+      " exercices • " +
+      totalReps +
+      " répétitions au total";
+
+  }
+
+
+  if (selectedRoutineExercises) {
+
+    selectedRoutineExercises.innerHTML =
+      "";
+
+
+    routine.exercises.forEach(
+      exercise => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+
+        row.className =
+          "selected-routine-exercise";
+
+
+        row.innerHTML = `
+
+          <span>
+            ${escapeRoutineText(
+              exercise.name
+            )}
+          </span>
+
+          <strong>
+            × ${exercise.reps}
+          </strong>
+
+        `;
+
+
+        selectedRoutineExercises
+          .appendChild(
+            row
+          );
+
+      }
+    );
+
+  }
+
+
+  if (routineSelected) {
+
+    routineSelected.classList.remove(
+      "hidden"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   UTILISER ROUTINE
+========================================================= */
+
+function useSelectedNexusRoutine() {
+
+  const routine =
+    nexusRoutines.find(item =>
+      item.id ===
+      selectedRoutineId
+    );
+
+
+  if (!routine) {
+
+    alert(
+      "Choisis d'abord une routine."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    On garde la routine choisie disponible
+    pour Nexus Move.
+  */
+
+  localStorage.setItem(
+    "nexusMoveSelectedRoutine",
+    JSON.stringify(routine)
+  );
+
+
+  /*
+    Cette variable permet également
+    au reste du script d'y accéder.
+  */
+
+  window.nexusMoveSelectedRoutine =
+    routine;
+
+
+  alert(
+    '"' +
+    routine.name +
+    '" est prête.'
+  );
+
+}
+
+
+/* =========================================================
+   ÉVÉNEMENTS
+========================================================= */
+
+const openRoutineCreatorBtn =
+  document.getElementById(
+    "openRoutineCreatorBtn"
+  );
+
+
+if (openRoutineCreatorBtn) {
+
+  openRoutineCreatorBtn
+    .addEventListener(
+      "click",
+      openNewRoutineEditor
+    );
+
+}
+
+
+const closeRoutineEditorBtn =
+  document.getElementById(
+    "closeRoutineEditorBtn"
+  );
+
+
+if (closeRoutineEditorBtn) {
+
+  closeRoutineEditorBtn
+    .addEventListener(
+      "click",
+      closeRoutineEditor
+    );
+
+}
+
+
+const cancelRoutineBtn =
+  document.getElementById(
+    "cancelRoutineBtn"
+  );
+
+
+if (cancelRoutineBtn) {
+
+  cancelRoutineBtn
+    .addEventListener(
+      "click",
+      closeRoutineEditor
+    );
+
+}
+
+
+const addRoutineExerciseBtn =
+  document.getElementById(
+    "addRoutineExerciseBtn"
+  );
+
+
+if (addRoutineExerciseBtn) {
+
+  addRoutineExerciseBtn
+    .addEventListener(
+      "click",
+      () =>
+        addRoutineExercise()
+    );
+
+}
+
+
+const routineRoundsMinus =
+  document.getElementById(
+    "routineRoundsMinus"
+  );
+
+
+if (routineRoundsMinus) {
+
+  routineRoundsMinus
+    .addEventListener(
+      "click",
+      () => {
+
+        routineRounds--;
+
+        updateRoutineRounds();
+
+      }
+    );
+
+}
+
+
+const routineRoundsPlus =
+  document.getElementById(
+    "routineRoundsPlus"
+  );
+
+
+if (routineRoundsPlus) {
+
+  routineRoundsPlus
+    .addEventListener(
+      "click",
+      () => {
+
+        routineRounds++;
+
+        updateRoutineRounds();
+
+      }
+    );
+
+}
+
+
+const saveRoutineBtn =
+  document.getElementById(
+    "saveRoutineBtn"
+  );
+
+
+if (saveRoutineBtn) {
+
+  saveRoutineBtn
+    .addEventListener(
+      "click",
+      saveRoutineFromEditor
+    );
+
+}
+
+
+const useRoutineBtn =
+  document.getElementById(
+    "useRoutineBtn"
+  );
+
+
+if (useRoutineBtn) {
+
+  useRoutineBtn
+    .addEventListener(
+      "click",
+      useSelectedNexusRoutine
+    );
+
+}
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+loadNexusRoutines();
+
+renderNexusRoutines();
 
 
