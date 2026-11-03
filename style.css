@@ -3294,4 +3294,288 @@ input[type="number"] {
   font-weight: 600;
 }
 
+/* =========================================================
+   BILAN APRÈS SÉANCE
+========================================================= */
 
+.workout-feedback-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: rgba(3, 10, 18, 0.86);
+
+  overflow-y: auto;
+}
+
+
+.workout-feedback-card {
+  width: 100%;
+
+  max-width: 520px;
+
+  padding: 24px;
+
+  margin: auto 0 10px;
+
+  box-sizing: border-box;
+
+  background: #081a2a;
+
+  border: 1px solid rgba(34, 230, 242, 0.22);
+
+  border-radius: 26px;
+}
+
+
+.feedback-kicker {
+  color: #22e6f2;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 2.5px;
+}
+
+
+.feedback-header h2 {
+  margin: 6px 0 0;
+
+  color: #ffffff;
+
+  font-size: 24px;
+}
+
+
+.feedback-section {
+  margin-top: 26px;
+}
+
+
+.feedback-section h3,
+.feedback-pain-locations h3 {
+  margin: 0 0 12px;
+
+  color: #ffffff;
+
+  font-size: 16px;
+}
+
+
+.feedback-choice-row {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 9px;
+}
+
+
+.feedback-choice-btn,
+.feedback-pain-btn {
+  min-height: 48px;
+
+  border: 1px solid rgba(117, 157, 192, 0.18);
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: #d8e4ed;
+
+  font-weight: 800;
+}
+
+
+.feedback-choice-btn.selected,
+.feedback-pain-btn.selected {
+  border-color: #22dce8;
+
+  background: rgba(34, 220, 232, 0.18);
+
+  color: #22e6f2;
+}
+
+
+/* =========================================================
+   ÉNERGIE
+========================================================= */
+
+.feedback-energy-row {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 8px;
+}
+
+
+.feedback-energy-row button {
+  aspect-ratio: 1;
+
+  border: 1px solid rgba(117, 157, 192, 0.18);
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: #ffffff;
+
+  font-size: 17px;
+  font-weight: 900;
+}
+
+
+.feedback-energy-row button.selected {
+  border-color: #22dce8;
+
+  background: #22dce8;
+
+  color: #04151d;
+}
+
+
+.feedback-energy-labels {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 7px;
+
+  color: #657d96;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   DOULEUR
+========================================================= */
+
+.feedback-pain-locations {
+  margin-top: 25px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid rgba(117, 157, 192, 0.12);
+}
+
+
+.feedback-pain-locations p {
+  margin: -5px 0 15px;
+
+  color: #7e94ab;
+
+  font-size: 12px;
+}
+
+
+.pain-location-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+}
+
+
+.pain-location-grid button {
+  min-height: 43px;
+
+  padding: 8px;
+
+  border: 1px solid rgba(117, 157, 192, 0.16);
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #cad8e4;
+
+  font-size: 13px;
+}
+
+
+.pain-location-grid button.selected {
+  border-color: #ff9e7a;
+
+  background: rgba(255, 128, 92, 0.13);
+
+  color: #ffae8e;
+}
+
+
+.feedback-other-label {
+  display: block;
+
+  margin-top: 18px;
+  margin-bottom: 7px;
+
+  color: #8095ac;
+
+  font-size: 12px;
+}
+
+
+.feedback-other-input {
+  width: 100%;
+
+  min-height: 46px;
+
+  padding: 0 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(117, 157, 192, 0.18);
+
+  border-radius: 13px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #ffffff;
+
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   ENREGISTRER
+========================================================= */
+
+.feedback-save-btn {
+  width: 100%;
+
+  min-height: 52px;
+
+  margin-top: 28px;
+
+  border: 0;
+
+  border-radius: 16px;
+
+  background: #22dce8;
+
+  color: #04151d;
+
+  font-size: 15px;
+  font-weight: 900;
+}
+
+
+.workout-feedback-overlay.hidden,
+.feedback-pain-locations.hidden {
+  display: none !important;
+}
