@@ -5189,8 +5189,7 @@ function useSelectedNexusRoutine() {
 
   const routine =
     nexusRoutines.find(item =>
-      item.id ===
-      selectedRoutineId
+      item.id === selectedRoutineId
     );
 
 
@@ -5201,14 +5200,71 @@ function useSelectedNexusRoutine() {
     );
 
     return;
+  }
+
+
+  /* =====================================================
+     1. NOMBRE DE TOURS
+  ===================================================== */
+
+  const roundCount =
+    document.getElementById(
+      "roundCount"
+    );
+
+
+  if (roundCount) {
+
+    roundCount.value =
+      routine.rounds;
 
   }
 
 
-  /*
-    On garde la routine choisie disponible
-    pour Nexus Move.
-  */
+  /* =====================================================
+     2. REMPLACER LES EXERCICES DU CIRCUIT
+  ===================================================== */
+
+  exercises = routine.exercises.map(
+    exercise => {
+
+      return {
+
+        name:
+          exercise.name,
+
+        type:
+          "reps",
+
+        reps:
+          Number(exercise.reps),
+
+        time:
+          0
+
+      };
+
+    }
+  );
+
+
+  /* =====================================================
+     3. RAFRAÎCHIR L'AFFICHAGE
+  ===================================================== */
+
+  if (
+    typeof renderExercises ===
+    "function"
+  ) {
+
+    renderExercises();
+
+  }
+
+
+  /* =====================================================
+     4. GARDER LE NOM DE LA ROUTINE
+  ===================================================== */
 
   localStorage.setItem(
     "nexusMoveSelectedRoutine",
@@ -5216,23 +5272,20 @@ function useSelectedNexusRoutine() {
   );
 
 
-  /*
-    Cette variable permet également
-    au reste du script d'y accéder.
-  */
-
   window.nexusMoveSelectedRoutine =
     routine;
 
 
+  /* =====================================================
+     5. CONFIRMATION
+  ===================================================== */
+
   alert(
-    '"' +
     routine.name +
-    '" est prête.'
+    " chargée dans le circuit."
   );
 
 }
-
 
 /* =========================================================
    ÉVÉNEMENTS
