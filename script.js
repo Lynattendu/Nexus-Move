@@ -4010,7 +4010,223 @@ function renderMorningChart(sessions) {
   `;
 }
 
+/* =========================================================
+   MES RECORDS
+========================================================= */
 
+function renderMorningRecords(sessions) {
+
+  if (!sessions.length) {
+    return;
+  }
+
+
+  /* -------------------------
+     MEILLEURE SÉRIE
+  ------------------------- */
+
+  const uniqueDays =
+    [
+      ...new Set(
+        sessions.map(session =>
+          morningDateKey(session.date)
+        )
+      )
+    ]
+    .sort();
+
+
+  let bestStreak = 1;
+  let currentStreak = 1;
+
+
+  for (let i = 1; i < uniqueDays.length; i++) {
+
+    const previous =
+      new Date(
+        uniqueDays[i - 1] + "T12:00:00"
+      );
+
+    const current =
+      new Date(
+        uniqueDays[i] + "T12:00:00"
+      );
+
+
+    const difference =
+      Math.round(
+        (current - previous) /
+        86400000
+      );
+
+
+    if (difference === 1) {
+
+      currentStreak++;
+
+      bestStreak =
+        Math.max(
+          bestStreak,
+          currentStreak
+        );
+
+    } else {
+
+      currentStreak = 1;
+
+    }
+
+  }
+
+
+  /* -------------------------
+     MEILLEURE SEMAINE
+  ------------------------- */
+
+  const weeks = {};
+
+
+  sessions.forEach(session => {
+
+    const date =
+      new Date(session.date);
+
+    const monday =
+      new Date(date);
+
+    const day =
+      monday.getDay();
+
+    const diff =
+      day === 0
+        ? -6
+        : 1 - day;
+
+    monday.setDate(
+      monday.getDate() + diff
+    );
+
+    const key =
+      morningDateKey(monday);
+
+
+    if (!weeks[key]) {
+      weeks[key] = new Set();
+    }
+
+
+    weeks[key].add(
+      morningDateKey(date)
+    );
+
+  });
+
+
+  let bestWeek = 0;
+
+
+  Object.values(weeks).forEach(days => {
+
+    bestWeek =
+      Math.max(
+        bestWeek,
+        days.size
+      );
+
+  });
+
+
+  /* -------------------------
+     MOIS EN COURS
+  ------------------------- */
+
+  const now =
+    new Date();
+
+
+  const monthSessions =
+    sessions.filter(session => {
+
+      const date =
+        new Date(session.date);
+
+      return (
+        date.getMonth() ===
+        now.getMonth() &&
+        date.getFullYear() ===
+        now.getFullYear()
+      );
+
+    });
+
+
+  const monthDays =
+    new Set(
+      monthSessions.map(session =>
+        morningDateKey(session.date)
+      )
+    );
+
+
+  const monthTime =
+    monthSessions.reduce(
+      (total, session) =>
+        total + session.duration,
+      0
+    );
+
+
+  /* -------------------------
+     AFFICHAGE
+  ------------------------- */
+
+  const streakElement =
+    document.getElementById(
+      "recordBestStreak"
+    );
+
+  const weekElement =
+    document.getElementById(
+      "recordBestWeek"
+    );
+
+  const monthSessionsElement =
+    document.getElementById(
+      "recordMonthSessions"
+    );
+
+  const monthTimeElement =
+    document.getElementById(
+      "recordMonthTime"
+    );
+
+
+  if (streakElement) {
+    streakElement.textContent =
+      bestStreak;
+  }
+
+
+  if (weekElement) {
+    weekElement.textContent =
+      bestWeek;
+  }
+
+
+  if (monthSessionsElement) {
+    monthSessionsElement.textContent =
+      monthDays.size;
+  }
+
+
+  if (monthTimeElement) {
+    monthTimeElement.textContent =
+      morningFormatTotal(
+        monthTime
+      );
+  }
+
+}
 /* =========================================================
    TOUT AFFICHER
 ========================================================= */
