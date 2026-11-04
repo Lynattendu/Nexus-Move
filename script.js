@@ -7011,6 +7011,775 @@ if (saveWorkoutFeedbackBtn) {
 
 }
 
+/* =========================================================
+   NEXUS MOVE — PROGRESSION PAR EXERCICE
+========================================================= */
 
+
+/* =========================================================
+   LECTURE DES SÉANCES
+========================================================= */
+
+function getExerciseProgressSessions() {
+
+  let history = [];
+
+  try {
+
+    history = JSON.parse(
+      localStorage.getItem("nexusMoveHistory")
+    ) || [];
+
+  } catch (error) {
+
+    return [];
+
+  }
+
+  if (!Array.isArray(history)) {
+    return [];
+  }
+
+  return history.filter(session =>
+
+    session &&
+    session.type === "circuit" &&
+    Array.isArray(session.exerciseResults) &&
+    session.exerciseResults.length > 0
+
+  ).sort((a, b) =>
+    new Date(a.date) - new Date(b.date)
+  );
+
+}
+
+
+/* =========================================================
+   REGROUPER LES EXERCICES
+========================================================= */
+
+function getExerciseProgressGroups() {
+
+  const sessions =
+    getExerciseProgressSessions();
+
+  const groups =
+    new Map();
+
+
+  sessions.forEach(session => {
+
+    const routineId =
+      session.routineId ||
+      "circuit-libre";
+
+    const routineName =
+      session.routineName ||
+      "Circuit libre";
+
+    const sessionExercises =
+      new Map();
+
+
+    session.exerciseResults.forEach(result => {
+
+      if (
+        !result ||
+        result.type !== "reps"
+      ) {
+        return;
+      }
+
+      const name =
+        String(result.exerciseName || "")
+          .trim();
+
+      const reps =
+        Number(result.repetitions);
+
+      const duration =
+        Number(result.durationSeconds);
+
+      if (
+        !name ||
+        !Number.isFinite(reps) ||
+        reps <= 0 ||
+        !Number.isFinite(duration) ||
+        duration <= 0
+      ) {
+        return;
+      }
+
+
+      const exerciseKey =
+        name.toLowerCase();
+
+      if (!sessionExercises.has(exerciseKey)) {
+
+        sessionExercises.set(exerciseKey, {
+          name: name,
+          reps: 0,
+          duration: 0,
+          rounds: 0
+        });
+
+      }
+
+
+      const item =
+        sessionExercises.get(exerciseKey);
+
+      item.reps += reps;
+
+      item.duration += duration;
+
+      item.rounds++;
+
+    });
+
+
+    sessionExercises.forEach((item, exerciseKey) => {
+
+      const groupKey =
+        JSON.stringify([
+          routineId,
+          exerciseKey
+        ]);
+
+      if (!groups.has(groupKey)) {
+
+        groups.set(groupKey, {
+
+          name: item.name,
+
+          routineName: routineName,
+
+          sessions: []
+
+        });
+
+      }
+
+
+      groups.get(groupKey).sessions.push({
+
+        date: session.date,
+
+        reps: item.reps,
+
+        duration: item.duration,
+
+        rounds: item.rounds,
+
+        cadence:
+          item.reps /
+          (item.duration / 60)
+
+      });
+
+    });
+
+  });
+
+
+  return [...groups.values()];
+
+}
+
+
+/* =========================================================
+   FORMATAGE
+========================================================= */
+
+function exerciseProgressTime(seconds) {
+
+  const value = Number(seconds);
+
+  if (!Number.isFinite(value)) {
+    return "—";
+  }
+
+  return (
+    value.toFixed(1).replace(".", ",") +
+    " s"
+  );
+
+}
+
+
+function exerciseProgressNumber(value) {
+
+  return Number(value)
+    .toFixed(1)
+    .replace(".", ",");
+
+}
+
+
+/* =========================================================
+   PETITE COURBE D'ÉVOLUTION
+========================================================= */
+
+function createExerciseProgressChart(sessions) {
+
+  const svgNS =
+    "http://www.w3.org/2000/svg";
+
+  const svg =
+    document.createElementNS(svgNS, "svg");
+
+  svg.setAttribute(
+    "viewBox",
+    "0 0 320 125"
+  );
+
+  svg.setAttribute(
+    "role",
+    "img"
+  );
+
+  svg.setAttribute(
+    "aria-label",
+    "Évolution de la cadence en répétitions par minute"
+  );
+
+
+  const data =
+    sessions.slice(-8);
+
+  const values =
+    data.map(item => item.cadence);
+
+  const min =
+    Math.min(...values);
+
+  const max =
+    Math.max(...values);
+
+  const range =
+    Math.max(1, max - min);
+
+  const left = 12;
+  const right = 308;
+  const top = 20;
+  const bottom = 100;
+
+
+  const points =
+    data.map((item, index) => {
+
+      const x =
+        left +
+        index /
+        (data.length - 1) *
+        (right - left);
+
+      const y =
+        bottom -
+        (item.cadence - min) /
+        range *
+        (bottom - top);
+
+      return {x, y};
+
+    });
+
+
+  for (let i = 0; i < 3; i++) {
+
+    const y =
+      top + i * 40;
+
+    const line =
+      document.createElementNS(
+        svgNS,
+        "line"
+      );
+
+    line.setAttribute("x1", left);
+    line.setAttribute("x2", right);
+    line.setAttribute("y1", y);
+    line.setAttribute("y2", y);
+
+    line.setAttribute(
+      "stroke",
+      "rgba(130,155,183,0.18)"
+    );
+
+    svg.appendChild(line);
+
+  }
+
+
+  const polyline =
+    document.createElementNS(
+      svgNS,
+      "polyline"
+    );
+
+  polyline.setAttribute(
+    "points",
+    points.map(point =>
+      point.x + "," + point.y
+    ).join(" ")
+  );
+
+  polyline.setAttribute("fill", "none");
+  polyline.setAttribute("stroke", "#22dce8");
+  polyline.setAttribute("stroke-width", "3");
+  polyline.setAttribute("stroke-linejoin", "round");
+
+  svg.appendChild(polyline);
+
+
+  points.forEach(point => {
+
+    const circle =
+      document.createElementNS(
+        svgNS,
+        "circle"
+      );
+
+    circle.setAttribute("cx", point.x);
+    circle.setAttribute("cy", point.y);
+    circle.setAttribute("r", "4");
+    circle.setAttribute("fill", "#071521");
+    circle.setAttribute("stroke", "#22dce8");
+    circle.setAttribute("stroke-width", "2");
+
+    svg.appendChild(circle);
+
+  });
+
+
+  return svg;
+
+}
+
+
+/* =========================================================
+   ANALYSER DEUX SÉANCES
+========================================================= */
+
+function getExerciseProgressMessage(previous, latest) {
+
+  const repsChange =
+    (latest.reps - previous.reps) /
+    previous.reps * 100;
+
+  const cadenceChange =
+    (latest.cadence - previous.cadence) /
+    previous.cadence * 100;
+
+
+  if (repsChange > 2 && cadenceChange > 2) {
+
+    return {
+      status: "up",
+      message:
+        "↗ Plus de répétitions et une cadence supérieure."
+    };
+
+  }
+
+
+  if (repsChange > 2) {
+
+    return {
+      status: "up",
+      message:
+        "↗ Tu as augmenté le nombre de répétitions. Le volume progresse."
+    };
+
+  }
+
+
+  if (repsChange < -2) {
+
+    return {
+      status: "stable",
+      message:
+        "→ Volume réduit sur cette séance. Comparaison des temps à nuancer."
+    };
+
+  }
+
+
+  if (cadenceChange > 2) {
+
+    return {
+      status: "up",
+      message:
+        "↗ Même volume, réalisé plus rapidement."
+    };
+
+  }
+
+
+  if (cadenceChange < -2) {
+
+    return {
+      status: "down",
+      message:
+        "↘ Même volume, mais davantage de temps nécessaire."
+    };
+
+  }
+
+
+  return {
+    status: "stable",
+    message:
+      "→ Répétitions et cadence globalement stables."
+  };
+
+}
+
+
+/* =========================================================
+   AFFICHER UNE CARTE
+========================================================= */
+
+function createExerciseProgressCard(group) {
+
+  const sessions =
+    group.sessions;
+
+  const latest =
+    sessions[sessions.length - 1];
+
+  const previous =
+    sessions[sessions.length - 2];
+
+  const analysis =
+    getExerciseProgressMessage(
+      previous,
+      latest
+    );
+
+
+  const card =
+    document.createElement("article");
+
+  card.className =
+    "exercise-progress-card";
+
+
+  const title =
+    document.createElement("div");
+
+  title.className =
+    "exercise-progress-name";
+
+  title.textContent =
+    group.name;
+
+  card.appendChild(title);
+
+
+  const routine =
+    document.createElement("div");
+
+  routine.className =
+    "exercise-progress-routine";
+
+  routine.textContent =
+    group.routineName +
+    " • " +
+    sessions.length +
+    " séances comparées";
+
+  card.appendChild(routine);
+
+
+  /* DERNIÈRE SÉANCE */
+
+  const stats =
+    document.createElement("div");
+
+  stats.className =
+    "exercise-progress-stats";
+
+
+  const values = [
+
+    [
+      latest.reps,
+      "Répétitions"
+    ],
+
+    [
+      exerciseProgressTime(latest.duration),
+      "Temps actif"
+    ],
+
+    [
+      exerciseProgressNumber(latest.cadence),
+      "Reps/min"
+    ]
+
+  ];
+
+
+  values.forEach(item => {
+
+    const box =
+      document.createElement("div");
+
+    box.className =
+      "exercise-progress-stat";
+
+    const strong =
+      document.createElement("strong");
+
+    strong.textContent =
+      item[0];
+
+    const label =
+      document.createElement("span");
+
+    label.textContent =
+      item[1];
+
+    box.appendChild(strong);
+    box.appendChild(label);
+
+    stats.appendChild(box);
+
+  });
+
+
+  card.appendChild(stats);
+
+
+  /* ANALYSE */
+
+  const trend =
+    document.createElement("div");
+
+  trend.className =
+    "exercise-progress-trend " +
+    analysis.status;
+
+  trend.textContent =
+    analysis.message;
+
+  card.appendChild(trend);
+
+
+  /* COURBE */
+
+  const chartBox =
+    document.createElement("div");
+
+  chartBox.className =
+    "exercise-progress-chart";
+
+  const chartTitle =
+    document.createElement("div");
+
+  chartTitle.className =
+    "exercise-progress-chart-title";
+
+  chartTitle.textContent =
+    "Cadence • répétitions par minute";
+
+  chartBox.appendChild(chartTitle);
+
+  chartBox.appendChild(
+    createExerciseProgressChart(sessions)
+  );
+
+  card.appendChild(chartBox);
+
+
+  /* HISTORIQUE DES 5 DERNIÈRES SÉANCES */
+
+  const table =
+    document.createElement("table");
+
+  table.className =
+    "exercise-progress-history";
+
+
+  const header =
+    document.createElement("tr");
+
+  ["Date", "Reps", "Temps", "Reps/min"]
+    .forEach(label => {
+
+      const th =
+        document.createElement("th");
+
+      th.textContent =
+        label;
+
+      header.appendChild(th);
+
+    });
+
+
+  const thead =
+    document.createElement("thead");
+
+  thead.appendChild(header);
+
+  table.appendChild(thead);
+
+
+  const tbody =
+    document.createElement("tbody");
+
+
+  sessions.slice(-5).reverse().forEach(session => {
+
+    const row =
+      document.createElement("tr");
+
+    const date =
+      new Date(session.date);
+
+    const cells = [
+
+      date.toLocaleDateString(
+        "fr-FR",
+        {
+          day: "numeric",
+          month: "short"
+        }
+      ),
+
+      String(session.reps),
+
+      exerciseProgressTime(
+        session.duration
+      ),
+
+      exerciseProgressNumber(
+        session.cadence
+      )
+
+    ];
+
+
+    cells.forEach(value => {
+
+      const td =
+        document.createElement("td");
+
+      td.textContent =
+        value;
+
+      row.appendChild(td);
+
+    });
+
+
+    tbody.appendChild(row);
+
+  });
+
+
+  table.appendChild(tbody);
+  card.appendChild(table);
+
+
+  const note =
+    document.createElement("div");
+
+  note.className =
+    "exercise-progress-note";
+
+  note.textContent =
+    "Temps et répétitions cumulés sur tous les tours. La cadence ne mesure pas à elle seule la qualité des mouvements.";
+
+  card.appendChild(note);
+
+
+  return card;
+
+}
+
+
+/* =========================================================
+   AFFICHAGE GÉNÉRAL
+========================================================= */
+
+function renderExerciseProgression() {
+
+  const container =
+    document.getElementById(
+      "exerciseProgressList"
+    );
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML = "";
+
+
+  const groups =
+    getExerciseProgressGroups()
+      .filter(group =>
+        group.sessions.length >= 2
+      );
+
+
+  if (!groups.length) {
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "exercise-progress-empty";
+
+    empty.textContent =
+      "Il faut au moins deux séances du même circuit avec des temps individuels enregistrés.";
+
+    container.appendChild(empty);
+
+    return;
+  }
+
+
+  groups.forEach(group => {
+
+    container.appendChild(
+      createExerciseProgressCard(group)
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   ACTUALISER À L'OUVERTURE DE L'HISTORIQUE
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    const button =
+      document.getElementById(
+        "openHistoryBtn"
+      );
+
+    if (button) {
+
+      button.addEventListener(
+        "click",
+        renderExerciseProgression
+      );
+
+    }
+
+    renderExerciseProgression();
+
+  }
+);
 
 
