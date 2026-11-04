@@ -1328,7 +1328,13 @@ function prepareWorkout() {
 
   pauseStartedAt =
     0;
+/* Remise à zéro des résultats */
 
+exerciseResults = [];
+
+exerciseStartedAt = 0;
+
+exercisePauseAtStart = 0;
 
   el("workoutPhase").textContent =
     "PRÊT";
