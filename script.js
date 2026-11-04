@@ -5389,7 +5389,6 @@ function useSelectedNexusRoutine() {
       item.id === selectedRoutineId
     );
 
-
   if (!routine) {
 
     alert(
@@ -5399,80 +5398,46 @@ function useSelectedNexusRoutine() {
     return;
   }
 
+  /* COPIE DE LA ROUTINE */
 
-  /* =====================================================
-     1. NOMBRE DE TOURS
-  ===================================================== */
-
-  const roundCount =
-    document.getElementById(
-      "roundCount"
+  const routineToLoad =
+    JSON.parse(
+      JSON.stringify(routine)
     );
 
+  /* ENVOYER AU CIRCUIT */
 
-  if (roundCount) {
-
-    roundCount.value =
-      routine.rounds;
-
-  }
-
-
-  /* =====================================================
-     2. REMPLACER LES EXERCICES DU CIRCUIT
-  ===================================================== */
-
-    exercises = routine.exercises.map(
-    exercise => {
-
-      return {
-
-        name:
-          exercise.name,
-
-        type:
-          "reps",
-
-        value:
-          Number(exercise.reps)
-
-      };
-
-    }
+  document.dispatchEvent(
+    new CustomEvent(
+      "nexusLoadRoutine",
+      {
+        detail: routineToLoad
+      }
+    )
   );
 
+  /* VÉRIFIER LE CHARGEMENT */
 
-  /* =====================================================
-     3. RAFRAÎCHIR L'AFFICHAGE
-  ===================================================== */
+  if (!routineToLoad.loaded) {
 
-  if (
-    typeof renderExercises ===
-    "function"
-  ) {
+    alert(
+      "Impossible de charger la routine."
+    );
 
-    renderExercises();
-
+    return;
   }
 
+  /* MÉMORISER LA ROUTINE */
 
-  /* =====================================================
-     4. GARDER LE NOM DE LA ROUTINE
-  ===================================================== */
+  delete routineToLoad.loaded;
 
   localStorage.setItem(
     "nexusMoveSelectedRoutine",
-    JSON.stringify(routine)
+    JSON.stringify(routineToLoad)
   );
 
-
   window.nexusMoveSelectedRoutine =
-    routine;
-
-
-  /* =====================================================
-     5. CONFIRMATION
-  ===================================================== */
+    routineToLoad;
 
   alert(
     routine.name +
@@ -5480,6 +5445,7 @@ function useSelectedNexusRoutine() {
   );
 
 }
+
 
 /* =========================================================
    ÉVÉNEMENTS
