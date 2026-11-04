@@ -1649,8 +1649,58 @@ function finishPhase() {
 
 function completeExercise() {
 
-  completedExerciseCount++;
+  /* =====================================================
+     ENREGISTRER LE TEMPS DE L'EXERCICE
+  ===================================================== */
 
+  if (phase !== "exercise") {
+    return;
+  }
+
+  const exercise =
+    workout.exercises[
+      currentExercise
+    ];
+
+  const elapsedMilliseconds =
+    Date.now() -
+    exerciseStartedAt -
+    (
+      totalPauseTime -
+      exercisePauseAtStart
+    );
+
+  const exerciseDuration =
+    Math.max(
+      0,
+      Math.round(
+        elapsedMilliseconds / 100
+      ) / 10
+    );
+
+  exerciseResults.push({
+
+    round:
+      currentRound,
+
+    exerciseName:
+      exercise.name,
+
+    type:
+      exercise.type,
+
+    repetitions:
+      exercise.type === "reps"
+        ? Number(exercise.value)
+        : null,
+
+    durationSeconds:
+      exerciseDuration
+
+  });
+
+
+  completedExerciseCount++;
 
   updateProgress();
 
