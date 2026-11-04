@@ -5363,7 +5363,7 @@ function useSelectedNexusRoutine() {
      2. REMPLACER LES EXERCICES DU CIRCUIT
   ===================================================== */
 
-  exercises = routine.exercises.map(
+    exercises = routine.exercises.map(
     exercise => {
 
       return {
@@ -5374,11 +5374,8 @@ function useSelectedNexusRoutine() {
         type:
           "reps",
 
-        reps:
-          Number(exercise.reps),
-
-        time:
-          0
+        value:
+          Number(exercise.reps)
 
       };
 
