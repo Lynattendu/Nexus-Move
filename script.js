@@ -3396,7 +3396,63 @@ renderProgression();
       );
     }
 
+/* =========================================================
+   DÉTAIL DES TEMPS PAR EXERCICE
+========================================================= */
 
+if (
+  session.type === "circuit" &&
+  Array.isArray(session.exerciseResults) &&
+  session.exerciseResults.length > 0
+) {
+
+  const title =
+    document.createElement("h4");
+
+  title.textContent =
+    "Temps par exercice";
+
+  title.style.marginTop =
+    "20px";
+
+  title.style.color =
+    "#22dce8";
+
+  details.appendChild(title);
+
+
+  session.exerciseResults.forEach(
+    result => {
+
+      const line =
+        document.createElement("div");
+
+      line.className =
+        "exercise-result-line";
+
+      const reps =
+        result.type === "reps"
+          ? result.repetitions +
+            " répétitions"
+          : "Exercice chronométré";
+
+      line.textContent =
+        "Tour " +
+        result.round +
+        " • " +
+        result.exerciseName +
+        " • " +
+        reps +
+        " • " +
+        result.durationSeconds +
+        " s";
+
+      details.appendChild(line);
+
+    }
+  );
+
+}
     card.appendChild(
       header
     );
