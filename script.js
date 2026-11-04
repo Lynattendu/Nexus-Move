@@ -3411,6 +3411,65 @@ function updateHomeStats() {
 
 
 /* =========================================================
+   CONNEXION ROUTINES → CIRCUIT
+========================================================= */
+
+document.addEventListener(
+  "nexusLoadRoutine",
+  function(event) {
+
+    const routine =
+      event.detail;
+
+    if (
+      !routine ||
+      !Array.isArray(routine.exercises) ||
+      routine.exercises.length === 0
+    ) {
+      return;
+    }
+
+    const newExercises =
+      routine.exercises.map(
+        function(exercise, index) {
+
+          return {
+            id: Date.now() + index,
+            name: exercise.name,
+            type: "reps",
+            value: Number(exercise.reps)
+          };
+
+        }
+      );
+
+    if (
+      newExercises.some(exercise =>
+        !exercise.name ||
+        !Number.isFinite(exercise.value) ||
+        exercise.value < 1
+      )
+    ) {
+      return;
+    }
+
+    exercises = newExercises;
+
+    el("roundCount").value =
+      routine.rounds;
+
+    renderExercises();
+
+    showScreen(
+      circuitSetupScreen
+    );
+
+    routine.loaded = true;
+
+  }
+);
+
+/* =========================================================
    INITIALISATION
 ========================================================= */
 
