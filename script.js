@@ -1443,7 +1443,15 @@ function startExercise() {
     workout.exercises[
       currentExercise
     ];
+/* =========================================================
+   DÉBUT DU CHRONO DE L'EXERCICE
+========================================================= */
 
+exerciseStartedAt =
+  Date.now();
+
+exercisePauseAtStart =
+  totalPauseTime;
 
   phase =
     "exercise";
