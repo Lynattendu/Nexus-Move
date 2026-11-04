@@ -3579,3 +3579,30 @@ input[type="number"] {
 .feedback-pain-locations.hidden {
   display: none !important;
 }
+
+/* =========================================================
+   TEMPS INDIVIDUELS DES EXERCICES
+========================================================= */
+
+.exercise-result-line {
+  padding: 9px 0;
+
+  color: #a8bed2;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  border-bottom:
+    1px solid rgba(117, 157, 192, 0.12);
+}
+
+.exercise-result-line:last-child {
+  border-bottom: none;
+}
+
+
+
+
+
+
