@@ -1203,7 +1203,15 @@ let totalPauseTime =
 
 let pauseStartedAt =
   0;
+/* =========================================================
+   SUIVI DU TEMPS PAR EXERCICE
+========================================================= */
 
+let exerciseResults = [];
+
+let exerciseStartedAt = 0;
+
+let exercisePauseAtStart = 0;
 
 /* =========================================================
    CRÉER CIRCUIT
