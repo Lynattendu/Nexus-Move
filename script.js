@@ -2355,7 +2355,12 @@ history.unshift({
 
   exercises:
     workout.exercises,
+/* Temps et répétitions de chaque exercice */
 
+exerciseResults:
+  exerciseResults.map(result => ({
+    ...result
+  })),
 
   /* ROUTINE UTILISÉE */
 
