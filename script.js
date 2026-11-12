@@ -3540,6 +3540,12 @@ function updateHomeStats() {
     formatDuration(
       timeTotal
     );
+
+   
+  /* ACTUALISER LA RÉGULARITÉ */
+
+  renderMorningDashboard();
+
 }
 
 
@@ -3871,10 +3877,12 @@ function renderMorningWeek(sessions) {
 
   if (countElement) {
 
-    countElement.textContent =
-      count === 1
-        ? "1 séance"
-        : count + " séances";
+    
+countElement.textContent =
+  count === 1
+    ? "1 jour actif"
+    : count + " jours actifs";
+
   }
 
 
