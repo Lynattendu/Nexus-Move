@@ -3622,74 +3622,75 @@ showScreen(
    HISTORIQUE — SPORT DU MATIN
 ========================================================= */
 
+
+/* =========================================================
+   HISTORIQUE — TOUTES LES ACTIVITÉS SPORTIVES
+========================================================= */
+
 function getMorningSessions() {
 
-  let sessions = [];
+  let history = [];
 
-  // Cherche automatiquement l'historique dans le localStorage
-  for (let i = 0; i < localStorage.length; i++) {
+  try {
 
-    const key = localStorage.key(i);
+    const saved = JSON.parse(
+      localStorage.getItem("nexusMoveHistory")
+    );
 
-    try {
+    history = Array.isArray(saved)
+      ? saved
+      : [];
 
-      const data =
-        JSON.parse(localStorage.getItem(key));
+  } catch (error) {
 
-      if (!Array.isArray(data)) {
-        continue;
-      }
-
-      const chronoSessions =
-        data.filter(item =>
-          item &&
-          (
-            item.type === "chrono" ||
-            item.activity ||
-            item.activite
-          ) &&
-          (
-            item.duration ||
-            item.duree
-          ) &&
-          item.date
-        );
-
-      if (chronoSessions.length > sessions.length) {
-        sessions = chronoSessions;
-      }
-
-    } catch (error) {
-      // On ignore les données qui ne sont pas de l'historique
-    }
+    return [];
 
   }
 
+  return history
 
-  return sessions
-    .map(session => {
+    .filter(session => {
 
-      return {
-        ...session,
+      if (!session || !session.date) {
+        return false;
+      }
 
-        duration:
-          Number(
-            session.duration ||
-            session.duree ||
-            0
-          )
-      };
+      const validType = [
+        "chrono",
+        "circuit",
+        "routine",
+        "solo",
+        "promethee-solo"
+      ].includes(session.type);
+
+      const validDate =
+        !Number.isNaN(
+          new Date(session.date).getTime()
+        );
+
+      const validDuration =
+        Number(session.duration) > 0;
+
+      return (
+        validType &&
+        validDate &&
+        validDuration
+      );
 
     })
-    .filter(session =>
-      session.duration > 0
-    )
-    .sort(
-      (a, b) =>
-        new Date(a.date) -
-        new Date(b.date)
+
+    .map(session => ({
+      ...session,
+      duration: Number(session.duration)
+    }))
+
+    .sort((a, b) =>
+      new Date(a.date) -
+      new Date(b.date)
     );
+
 }
+
 
 
 /* =========================================================
