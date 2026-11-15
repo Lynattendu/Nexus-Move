@@ -3186,27 +3186,31 @@ renderProgression();
       );
 
 
-    if (
-      session.type ===
-      "chrono"
-    ) {
+    if (session.type === "chrono") {
 
-      title.textContent =
-        session.name ||
-        "Activité";
+  title.textContent =
+    session.name || "Activité";
 
-    } else {
+} else if (
+  session.type === "promethee-solo"
+) {
 
-      title.textContent =
-        "Circuit • " +
-        session.rounds +
-        (
-          session.rounds > 1
-            ? " tours"
-            : " tour"
-        );
-    }
+  title.textContent =
+    "Prométhée Solo • " +
+    (session.mode || "Entraînement");
 
+} else {
+
+  title.textContent =
+    "Circuit • " +
+    session.rounds +
+    (
+      session.rounds > 1
+        ? " tours"
+        : " tour"
+    );
+
+}
 
     const time =
       document.createElement(
