@@ -58,9 +58,30 @@ el("openCircuitBtn").addEventListener("click", function () {
 
 el("openHistoryBtn").addEventListener("click", function () {
 
-  renderHistory();
+  /* OUVRIR L'ÉCRAN EN PREMIER */
 
   showScreen(historyScreen);
+
+  /* CHARGER LES RÉSULTATS */
+
+  try {
+
+    renderHistory();
+
+  } catch (error) {
+
+    console.error(
+      "Erreur historique Nexus Move :",
+      error
+    );
+
+    alert(
+      "L'historique a rencontré une erreur : " +
+      error.message
+    );
+
+  }
+
 });
 
 
