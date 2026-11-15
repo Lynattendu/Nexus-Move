@@ -7837,4 +7837,142 @@ document.addEventListener(
   }
 );
 
+/* =========================================================
+   NEXUS MOVE — IMPORT PROMÉTHÉE SOLO
+========================================================= */
 
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    const hash = window.location.hash;
+
+    if (
+      !hash.startsWith("#promethee=")
+    ) {
+      return;
+    }
+
+    let session;
+
+    try {
+
+      const contenu =
+        decodeURIComponent(
+          hash.slice(
+            "#promethee=".length
+          )
+        );
+
+      session = JSON.parse(contenu);
+
+    } catch (error) {
+
+      alert(
+        "Impossible de lire la séance Prométhée."
+      );
+
+      return;
+    }
+
+
+    /* VÉRIFICATION */
+
+    if (
+      !session ||
+      session.type !== "promethee-solo" ||
+      !session.id ||
+      !Array.isArray(session.exercises) ||
+      session.exercises.length === 0 ||
+      !Number.isFinite(Number(session.duration)) ||
+      Number(session.duration) <= 0
+    ) {
+
+      alert(
+        "Les données de la séance sont invalides."
+      );
+
+      return;
+    }
+
+
+    /* LECTURE DE L'HISTORIQUE */
+
+    let history = [];
+
+    try {
+
+      const saved = JSON.parse(
+        localStorage.getItem(
+          "nexusMoveHistory"
+        )
+      );
+
+      if (Array.isArray(saved)) {
+        history = saved;
+      }
+
+    } catch (error) {
+
+      alert(
+        "Impossible de lire l'historique Nexus Move."
+      );
+
+      return;
+    }
+
+
+    /* ÉVITER LES DOUBLONS */
+
+    const dejaEnregistree =
+      history.some(
+        item => item.id === session.id
+      );
+
+
+    if (!dejaEnregistree) {
+
+      history.unshift(session);
+
+      try {
+
+        localStorage.setItem(
+          "nexusMoveHistory",
+          JSON.stringify(history)
+        );
+
+      } catch (error) {
+
+        alert(
+          "Impossible d'enregistrer la séance dans Nexus Move."
+        );
+
+        return;
+      }
+
+    }
+
+
+    /* NETTOYER L'ADRESSE */
+
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname +
+      window.location.search
+    );
+
+
+    alert(
+      dejaEnregistree
+        ? "Cette séance Prométhée est déjà enregistrée."
+        : "Séance Prométhée enregistrée dans Nexus Move !"
+    );
+
+
+    /* RECHARGER POUR ACTUALISER LES STATS */
+
+    window.location.reload();
+
+  }
+);
