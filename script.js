@@ -3400,11 +3400,48 @@ renderProgression();
    DÉTAIL DES TEMPS PAR EXERCICE
 ========================================================= */
 
+/* =========================================================
+   DÉTAIL DES TEMPS PAR EXERCICE
+   AFFICHAGE REPLIABLE
+========================================================= */
+
 if (
   session.type === "circuit" &&
   Array.isArray(session.exerciseResults) &&
   session.exerciseResults.length > 0
 ) {
+
+  /* CONTENEUR REPLIABLE */
+
+  const detailsBox =
+    document.createElement("details");
+
+  detailsBox.className =
+    "exercise-times-details";
+
+
+  /* BOUTON AFFICHER / MASQUER */
+
+  const summary =
+    document.createElement("summary");
+
+  summary.className =
+    "exercise-times-toggle";
+
+  summary.textContent =
+    "Voir les temps par exercice";
+
+  detailsBox.appendChild(summary);
+
+
+  /* CONTENU DES TEMPS */
+
+  const resultsContainer =
+    document.createElement("div");
+
+  resultsContainer.className =
+    "exercise-times-content";
+
 
   const title =
     document.createElement("h4");
@@ -3413,12 +3450,12 @@ if (
     "Temps par exercice";
 
   title.style.marginTop =
-    "20px";
+    "16px";
 
   title.style.color =
     "#22dce8";
 
-  details.appendChild(title);
+  resultsContainer.appendChild(title);
 
 
   session.exerciseResults.forEach(
@@ -3447,15 +3484,24 @@ if (
         result.durationSeconds +
         " s";
 
-      details.appendChild(line);
+      resultsContainer.appendChild(line);
 
     }
   );
 
+
+  detailsBox.appendChild(
+    resultsContainer
+  );
+
+
+  /* AJOUT À LA CARTE */
+
+  details.appendChild(
+    detailsBox
+  );
+
 }
-    card.appendChild(
-      header
-    );
 
 
     card.appendChild(
