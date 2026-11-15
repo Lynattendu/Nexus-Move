@@ -3340,39 +3340,50 @@ renderProgression();
     } else {
 
 
-      session.exercises.forEach(function (exercise) {
+      session.exercises.forEach(
+  function(exercise) {
 
-        const line =
-          document.createElement(
-            "div"
-          );
+    const line =
+      document.createElement("div");
 
+    if (
+      session.type === "promethee-solo"
+    ) {
 
-        if (
-          exercise.type ===
-          "time"
-        ) {
-
-          line.textContent =
-            exercise.name +
-            " — " +
-            exercise.value +
-            " s";
-
-        } else {
-
-          line.textContent =
-            exercise.name +
-            " — " +
-            exercise.value +
-            " répétitions";
-        }
-
-
-        details.appendChild(
-          line
+      line.textContent =
+        exercise.name +
+        " — " +
+        exercise.series +
+        (
+          exercise.series > 1
+            ? " séries"
+            : " série"
         );
-      });
+
+    } else if (
+      exercise.type === "time"
+    ) {
+
+      line.textContent =
+        exercise.name +
+        " — " +
+        exercise.value +
+        " s";
+
+    } else {
+
+      line.textContent =
+        exercise.name +
+        " — " +
+        exercise.value +
+        " répétitions";
+
+    }
+
+    details.appendChild(line);
+
+  }
+);
 
 
       details.appendChild(
