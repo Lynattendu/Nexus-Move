@@ -3544,10 +3544,21 @@ if (
 }
 
 
+      /* AFFICHER LE TITRE DE LA SÉANCE */
+
+    card.appendChild(
+      header
+    );
+
+
+    /* AFFICHER LES EXERCICES ET LA DURÉE */
+
     card.appendChild(
       details
     );
 
+
+    /* AJOUTER LA SÉANCE À L'HISTORIQUE */
 
     list.appendChild(
       card
