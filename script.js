@@ -3361,7 +3361,11 @@ renderProgression();
     } else {
 
 
-      session.exercises.forEach(
+   (
+  Array.isArray(session.exercises)
+    ? session.exercises
+    : []
+).forEach(
   function(exercise) {
 
     const line =
