@@ -1393,157 +1393,108 @@
 
 
 
-    <!-- =====================================================
-         HISTORIQUE
-    ====================================================== -->
-
-    <section
-      class="screen"
-      id="historyScreen"
-    >
-<!-- =====================================================
-     BOUTON EFFACER L'HISTORIQUE
+  <!-- =====================================================
+     HISTORIQUE
 ===================================================== -->
 
-<button
-  id="clearHistoryBtn"
-  class="clear-history-btn"
-  type="button"
-  style="display:none;"
+<section
+  class="screen"
+  id="historyScreen"
 >
-  Effacer l'historique
-</button>
 
-      <header class="screen-header">
+  <!-- =====================================================
+       EN-TÊTE HISTORIQUE
+  ===================================================== -->
 
-        <button
-          class="back-btn"
-          data-back-home
-          type="button"
-        >
-          ‹
-        </button>
+  <header class="screen-header">
 
-<!-- =====================================================
-     LISTE DE TOUTES LES SÉANCES
-===================================================== -->
+    <button
+      class="back-btn"
+      data-back-home
+      type="button"
+    >
+      ‹
+    </button>
 
-<div id="historyList"></div>
-        <div>
+    <div>
 
-          <span class="screen-kicker">
-            NEXUS MOVE
-          </span>
+      <span class="screen-kicker">
+        NEXUS MOVE
+      </span>
 
-          <h2>
-            Historique
-          </h2>
+      <h2>
+        Historique
+      </h2>
 
-        </div>
+    </div>
 
-      </header>
+  </header>
 
 
+  <!-- =====================================================
+       CONTENU DE L'HISTORIQUE
+  ===================================================== -->
 
-      <div class="history-content">
-
-
-        <div class="history-summary">
-
-
-          <div>
-
-            <strong id="historyWorkoutCount">
-              0
-            </strong>
-
-            <span>
-              séances
-            </span>
-
-          </div>
+  <div class="history-content">
 
 
-          <div>
+    <!-- =====================================================
+         STATISTIQUES GÉNÉRALES
+    ===================================================== -->
 
-            <strong id="historyExerciseCount">
-              0
-            </strong>
+    <div class="history-summary">
 
-            <span>
-              exercices
-            </span>
+      <div>
 
-          </div>
+        <strong id="historyWorkoutCount">
+          0
+        </strong>
 
+        <span>
+          séances
+        </span>
 
-          <div>
-
-            <strong id="historyTotalTime">
-              0 min
-            </strong>
-
-            <span>
-              entraînement
-            </span>
-
-          </div>
+      </div>
 
 
-        </div>
+      <div>
+
+        <strong id="historyExerciseCount">
+          0
+        </strong>
+
+        <span>
+          exercices
+        </span>
+
+      </div>
 
 
-        <div class="history-summary">
+      <div>
+
+        <strong id="historyTotalTime">
+          0 min
+        </strong>
+
+        <span>
+          entraînement
+        </span>
+
+      </div>
+
+    </div>
 
 
-          <div>
-
-            <strong id="historyWorkoutCount">
-              0
-            </strong>
-
-            <span>
-              séances
-            </span>
-
-          </div>
-
-
-          <div>
-
-            <strong id="historyExerciseCount">
-              0
-            </strong>
-
-            <span>
-              exercices
-            </span>
-
-          </div>
-
-
-          <div>
-
-            <strong id="historyTotalTime">
-              0 min
-            </strong>
-
-            <span>
-              entraînement
-            </span>
-
-          </div>
-
-
-        </div>
-
-<!-- =====================================================
+   <!-- =====================================================
      SUIVI DU SPORT DU MATIN
 ===================================================== -->
 
 <section class="morning-dashboard">
 
-  <!-- DYNAMIQUE -->
+  <!-- =================================================
+       MA DYNAMIQUE
+  ================================================= -->
+
   <div class="morning-dynamic-card">
 
     <div
@@ -1574,7 +1525,10 @@
   </div>
 
 
-  <!-- CETTE SEMAINE -->
+  <!-- =================================================
+       CETTE SEMAINE
+  ================================================= -->
+
   <div class="morning-section">
 
     <div class="morning-section-header">
@@ -1595,7 +1549,7 @@
         class="morning-week-count"
         id="morningWeekCount"
       >
-        0 séance
+        0 jour actif
       </div>
 
     </div>
@@ -1605,37 +1559,58 @@
 
       <div class="morning-day">
         <span>L</span>
-        <div class="morning-day-dot" id="morning-day-1"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-1"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>M</span>
-        <div class="morning-day-dot" id="morning-day-2"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-2"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>M</span>
-        <div class="morning-day-dot" id="morning-day-3"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-3"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>J</span>
-        <div class="morning-day-dot" id="morning-day-4"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-4"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>V</span>
-        <div class="morning-day-dot" id="morning-day-5"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-5"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>S</span>
-        <div class="morning-day-dot" id="morning-day-6"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-6"
+        ></div>
       </div>
 
       <div class="morning-day">
         <span>D</span>
-        <div class="morning-day-dot" id="morning-day-7"></div>
+        <div
+          class="morning-day-dot"
+          id="morning-day-7"
+        ></div>
       </div>
 
     </div>
@@ -1651,7 +1626,10 @@
   </div>
 
 
-  <!-- COURBE -->
+  <!-- =================================================
+       COURBE DES DERNIÈRES SÉANCES
+  ================================================= -->
+
   <div class="morning-section">
 
     <div class="morning-section-header">
@@ -1682,108 +1660,119 @@
 
 
     <div class="morning-chart-note">
-      Durée de tes dernières séances chronométrées
+      Durée de tes dernières séances enregistrées
     </div>
 
-<!-- MES RECORDS -->
-<div class="morning-section">
+  </div>
 
-  <div class="morning-section-header">
 
-    <div>
+  <!-- =================================================
+       MES RECORDS
+  ================================================= -->
 
-      <div class="morning-small-title">
-        RECORDS
+  <div class="morning-section">
+
+    <div class="morning-section-header">
+
+      <div>
+
+        <div class="morning-small-title">
+          RECORDS
+        </div>
+
+        <h3>
+          Mes records
+        </h3>
+
       </div>
 
-      <h3>
-        Mes records
-      </h3>
-
-    </div>
-
-  </div>
-
-
-  <div class="morning-records-grid">
-
-    <div class="morning-record-card">
-
-      <span class="morning-record-icon">
-        🔥
-      </span>
-
-      <strong id="recordBestStreak">
-        0
-      </strong>
-
-      <span>
-        jours de suite
-      </span>
-
     </div>
 
 
-    <div class="morning-record-card">
+    <div class="morning-records-grid">
 
-      <span class="morning-record-icon">
-        🏆
-      </span>
+      <!-- MEILLEURE SÉRIE -->
 
-      <strong id="recordBestWeek">
-        0
-      </strong>
+      <div class="morning-record-card">
 
-      <span>
-        meilleure semaine
-      </span>
+        <span class="morning-record-icon">
+          🔥
+        </span>
+
+        <strong id="recordBestStreak">
+          0
+        </strong>
+
+        <span>
+          jours de suite
+        </span>
+
+      </div>
+
+
+      <!-- MEILLEURE SEMAINE -->
+
+      <div class="morning-record-card">
+
+        <span class="morning-record-icon">
+          🏆
+        </span>
+
+        <strong id="recordBestWeek">
+          0
+        </strong>
+
+        <span>
+          meilleure semaine
+        </span>
+
+      </div>
+
+
+      <!-- SÉANCES DU MOIS -->
+
+      <div class="morning-record-card">
+
+        <span class="morning-record-icon">
+          📅
+        </span>
+
+        <strong id="recordMonthSessions">
+          0
+        </strong>
+
+        <span>
+          séances ce mois
+        </span>
+
+      </div>
+
+
+      <!-- TEMPS DU MOIS -->
+
+      <div class="morning-record-card">
+
+        <span class="morning-record-icon">
+          ⏱️
+        </span>
+
+        <strong id="recordMonthTime">
+          0 min
+        </strong>
+
+        <span>
+          ce mois
+        </span>
+
+      </div>
 
     </div>
 
-
-    <div class="morning-record-card">
-
-      <span class="morning-record-icon">
-        📅
-      </span>
-
-      <strong id="recordMonthSessions">
-        0
-      </strong>
-
-      <span>
-        séances ce mois
-      </span>
-
-    </div>
-
-
-    <div class="morning-record-card">
-
-      <span class="morning-record-icon">
-        ⏱️
-      </span>
-
-      <strong id="recordMonthTime">
-        0 min
-      </strong>
-
-      <span>
-        ce mois
-      </span>
-
-    </div>
-
-  </div>
-
-</div>
-
-    
   </div>
 
 </section>
 
-        
+
 <!-- =====================================================
      PERFORMANCE — PROGRESSION PAR EXERCICE
 ===================================================== -->
@@ -1806,10 +1795,12 @@
 
   </div>
 
+
   <p class="exercise-progress-intro">
     Compare tes répétitions, tes temps
     et ta cadence au fil des séances.
   </p>
+
 
   <div
     class="exercise-progress-list"
@@ -1849,25 +1840,59 @@
 
   </div>
 
+
   <div
     class="progress-list"
     id="progressList"
   >
 
     <div class="progress-empty">
-
       Il faut au moins deux séances identiques
       pour calculer une progression.
-
     </div>
 
   </div>
 
 </section>
 
-  <!-- =====================================================
-       FLASH VISUEL CHANGEMENT DE PHASE
-  ====================================================== -->
+
+<!-- =====================================================
+     LISTE DE TOUTES LES SÉANCES
+===================================================== -->
+
+<div id="historyList"></div>
+
+
+<!-- =====================================================
+     EFFACER L'HISTORIQUE
+===================================================== -->
+
+<button
+  id="clearHistoryBtn"
+  class="clear-history-btn"
+  type="button"
+  style="display:none;"
+>
+  Effacer l'historique
+</button>
+
+
+<!-- =====================================================
+     FIN DU CONTENU DE L'HISTORIQUE
+===================================================== -->
+
+</div>
+
+<!-- =====================================================
+     FIN DE L'ÉCRAN HISTORIQUE
+===================================================== -->
+
+</section>
+
+
+<!-- =====================================================
+     FLASH VISUEL CHANGEMENT DE PHASE
+===================================================== -->
 
   <div
     class="phase-flash"
