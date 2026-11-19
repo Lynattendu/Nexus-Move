@@ -8027,3 +8027,855 @@ document.addEventListener(
 
   }
 );
+
+/* =========================================================
+   NEXUS MOVE — CALENDRIER SPORTIF INTELLIGENT
+   Planification + historique automatique
+========================================================= */
+
+(function () {
+
+  "use strict";
+
+  const PLAN_KEY = "nexusMoveCalendarPlans";
+  const HISTORY_KEY = "nexusMoveHistory";
+
+  let displayedMonth = new Date();
+  displayedMonth.setDate(1);
+
+  let selectedDate = localDateKey(new Date());
+  let editingId = null;
+
+
+  /* =====================================================
+     OUTILS
+  ===================================================== */
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function localDateKey(date) {
+
+    const d = new Date(date);
+
+    return (
+      d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0")
+    );
+  }
+
+  function dateFromKey(key) {
+    return new Date(key + "T12:00:00");
+  }
+
+  function formatDate(key) {
+
+    return dateFromKey(key).toLocaleDateString(
+      "fr-FR",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    );
+  }
+
+  function formatTime(seconds) {
+
+    const value = Math.max(
+      0,
+      Number(seconds) || 0
+    );
+
+    const minutes = Math.floor(value / 60);
+    const remaining = Math.round(value % 60);
+
+    if (minutes >= 60) {
+
+      return (
+        Math.floor(minutes / 60) +
+        " h " +
+        (minutes % 60) +
+        " min"
+      );
+    }
+
+    return minutes + " min " + remaining + " s";
+  }
+
+  function normalize(text) {
+
+    return String(text || "")
+      .trim()
+      .toLocaleLowerCase("fr-FR");
+  }
+
+  function makeText(tag, value, className) {
+
+    const node = document.createElement(tag);
+
+    node.textContent = value;
+
+    if (className) {
+      node.className = className;
+    }
+
+    return node;
+  }
+
+
+  /* =====================================================
+     LIRE LES DONNÉES
+  ===================================================== */
+
+  function readArray(key) {
+
+    try {
+
+      const value = JSON.parse(
+        localStorage.getItem(key)
+      );
+
+      return Array.isArray(value)
+        ? value
+        : [];
+
+    } catch (error) {
+
+      console.error(
+        "Erreur de lecture :", key, error
+      );
+
+      return [];
+    }
+  }
+
+  function getPlans() {
+    return readArray(PLAN_KEY);
+  }
+
+  function getSessions() {
+
+    return readArray(HISTORY_KEY)
+      .filter(session => {
+
+        return (
+          session &&
+          session.date &&
+          !Number.isNaN(
+            new Date(session.date).getTime()
+          )
+        );
+
+      });
+  }
+
+  function savePlans(plans) {
+
+    try {
+
+      localStorage.setItem(
+        PLAN_KEY,
+        JSON.stringify(plans)
+      );
+
+      return true;
+
+    } catch (error) {
+
+      alert(
+        "Impossible d'enregistrer la planification."
+      );
+
+      console.error(error);
+
+      return false;
+    }
+  }
+
+
+  /* =====================================================
+     CORRESPONDANCE PLANNING / HISTORIQUE
+  ===================================================== */
+
+  function sessionMatchesPlan(session, plan) {
+
+    if (plan.type === "rest") {
+      return false;
+    }
+
+    if (plan.type === "circuit") {
+
+      return session.type === "circuit" ||
+        session.type === "promethee-solo";
+    }
+
+    const sessionName = normalize(
+      session.name || session.routineName
+    );
+
+    if (plan.type === "chrono") {
+
+      return (
+        session.type === "chrono" &&
+        sessionName === normalize(plan.name)
+      );
+    }
+
+    return (
+      sessionName !== "" &&
+      sessionName === normalize(plan.name)
+    );
+  }
+
+  function getDayData(key, plans, sessions) {
+
+    const dayPlans = plans.filter(
+      plan => plan.date === key
+    );
+
+    const daySessions = sessions.filter(
+      session =>
+        localDateKey(session.date) === key
+    );
+
+    const usedSessions = new Set();
+
+    const planStatuses = dayPlans.map(plan => {
+
+      const matchingIndex =
+        daySessions.findIndex((session, index) => {
+
+          return (
+            !usedSessions.has(index) &&
+            sessionMatchesPlan(session, plan)
+          );
+
+        });
+
+      if (matchingIndex >= 0) {
+
+        usedSessions.add(matchingIndex);
+
+        return {
+          plan,
+          status: "done"
+        };
+      }
+
+      return {
+        plan,
+        status:
+          daySessions.length > 0 &&
+          plan.type !== "rest"
+            ? "review"
+            : "planned"
+      };
+    });
+
+    return {
+      plans: planStatuses,
+      sessions: daySessions
+    };
+  }
+
+
+  /* =====================================================
+     DESSINER LE CALENDRIER
+  ===================================================== */
+
+  function renderCalendar() {
+
+    const grid = byId("nmcalGrid");
+
+    if (!grid) {
+      return;
+    }
+
+    grid.innerHTML = "";
+
+    const plans = getPlans();
+    const sessions = getSessions();
+
+    byId("nmcalMonthTitle").textContent =
+      displayedMonth.toLocaleDateString(
+        "fr-FR",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    ["L", "M", "M", "J", "V", "S", "D"]
+      .forEach(day => {
+
+        grid.appendChild(
+          makeText(
+            "div",
+            day,
+            "nmcal-weekday"
+          )
+        );
+      });
+
+    const year = displayedMonth.getFullYear();
+    const month = displayedMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+
+    const leadingDays =
+      (firstDay.getDay() + 6) % 7;
+
+    const numberOfDays =
+      new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < leadingDays; i++) {
+
+      grid.appendChild(
+        document.createElement("div")
+      );
+    }
+
+    const today = localDateKey(new Date());
+
+    for (let number = 1; number <= numberOfDays; number++) {
+
+      const date = new Date(
+        year,
+        month,
+        number
+      );
+
+      const key = localDateKey(date);
+
+      const data = getDayData(
+        key,
+        plans,
+        sessions
+      );
+
+      const button =
+        document.createElement("button");
+
+      button.type = "button";
+      button.className = "nmcal-day";
+
+      if (key === today) {
+        button.classList.add("today");
+      }
+
+      if (key === selectedDate) {
+        button.classList.add("selected");
+      }
+
+      button.appendChild(
+        makeText("span", String(number))
+      );
+
+      const indicators =
+        document.createElement("div");
+
+      indicators.className =
+        "nmcal-day-indicators";
+
+      const hasDone =
+        data.sessions.length > 0;
+
+      const hasPlanned =
+        data.plans.some(item =>
+          item.status === "planned"
+        );
+
+      const hasReview =
+        data.plans.some(item =>
+          item.status === "review"
+        );
+
+      if (hasDone) {
+        addDot(indicators, "done");
+      }
+
+      if (hasPlanned) {
+        addDot(indicators, "planned");
+      }
+
+      if (hasReview) {
+        addDot(indicators, "review");
+      }
+
+      button.appendChild(indicators);
+
+      button.addEventListener("click", () => {
+
+        selectedDate = key;
+
+        byId("nmcalEditor").hidden = true;
+
+        renderCalendar();
+      });
+
+      grid.appendChild(button);
+    }
+
+    renderSelectedDay(plans, sessions);
+  }
+
+
+  function addDot(container, status) {
+
+    const dot = document.createElement("span");
+
+    dot.className = "nmcal-dot " + status;
+
+    container.appendChild(dot);
+  }
+
+
+  /* =====================================================
+     DÉTAIL D'UNE JOURNÉE
+  ===================================================== */
+
+  function renderSelectedDay(plans, sessions) {
+
+    const title = byId("nmcalSelectedTitle");
+    const summary = byId("nmcalDaySummary");
+
+    title.textContent = formatDate(selectedDate);
+
+    summary.innerHTML = "";
+
+    const data = getDayData(
+      selectedDate,
+      plans,
+      sessions
+    );
+
+    if (
+      data.plans.length === 0 &&
+      data.sessions.length === 0
+    ) {
+
+      summary.appendChild(
+        makeText(
+          "p",
+          "Aucune séance programmée ou enregistrée."
+        )
+      );
+
+      return;
+    }
+
+
+    /* SÉANCES PROGRAMMÉES */
+
+    data.plans.forEach(item => {
+
+      const plan = item.plan;
+
+      const card = document.createElement("div");
+      card.className = "nmcal-entry";
+
+      const statusText =
+        item.status === "done"
+          ? "✅ Séance correspondante réalisée"
+          : item.status === "review"
+            ? "🟠 Activité enregistrée ce jour — à vérifier"
+            : "🔵 Séance prévue";
+
+      card.appendChild(
+        makeText(
+          "small",
+          statusText
+        )
+      );
+
+      card.appendChild(
+        makeText(
+          "strong",
+          plan.name
+        )
+      );
+
+      if (plan.time) {
+
+        card.appendChild(
+          makeText(
+            "p",
+            "🕒 " + plan.time
+          )
+        );
+      }
+
+      if (plan.note) {
+
+        card.appendChild(
+          makeText(
+            "p",
+            plan.note
+          )
+        );
+      }
+
+      const actions =
+        document.createElement("div");
+
+      actions.className =
+        "nmcal-entry-actions";
+
+      const edit =
+        makeText("button", "Modifier");
+
+      edit.type = "button";
+
+      edit.addEventListener("click", () => {
+        openEditor(plan);
+      });
+
+      const remove =
+        makeText("button", "Supprimer");
+
+      remove.type = "button";
+
+      remove.addEventListener("click", () => {
+
+        if (!confirm("Supprimer cette planification ?")) {
+          return;
+        }
+
+        const updated = getPlans().filter(
+          item => item.id !== plan.id
+        );
+
+        if (savePlans(updated)) {
+          renderCalendar();
+        }
+      });
+
+      actions.appendChild(edit);
+      actions.appendChild(remove);
+
+      card.appendChild(actions);
+      summary.appendChild(card);
+    });
+
+
+    /* SÉANCES RÉELLEMENT ENREGISTRÉES */
+
+    data.sessions.forEach(session => {
+
+      const card = document.createElement("div");
+      card.className = "nmcal-entry";
+
+      card.appendChild(
+        makeText(
+          "small",
+          "🟢 Enregistré dans Nexus Move"
+        )
+      );
+
+      let name = "Entraînement";
+
+      if (session.type === "chrono") {
+
+        name = session.name || "Chronomètre";
+
+      } else if (session.type === "circuit") {
+
+        name = session.routineName || "Circuit";
+
+      } else if (session.type === "promethee-solo") {
+
+        name =
+          "Prométhée Solo — " +
+          (session.mode || "Entraînement");
+
+      } else {
+
+        name = session.name || "Entraînement";
+      }
+
+      card.appendChild(
+        makeText("strong", name)
+      );
+
+      const date = new Date(session.date);
+
+      card.appendChild(
+        makeText(
+          "p",
+          "🕒 " +
+          date.toLocaleTimeString(
+            "fr-FR",
+            {
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          )
+        )
+      );
+
+      if (Number(session.duration) > 0) {
+
+        card.appendChild(
+          makeText(
+            "p",
+            "Durée : " +
+            formatTime(session.duration)
+          )
+        );
+      }
+
+      if (Number(session.distance) > 0) {
+
+        card.appendChild(
+          makeText(
+            "p",
+            "Distance : " +
+            session.distance +
+            " m"
+          )
+        );
+      }
+
+      if (Number(session.completedExercises) > 0) {
+
+        card.appendChild(
+          makeText(
+            "p",
+            "Exercices : " +
+            session.completedExercises
+          )
+        );
+      }
+
+      summary.appendChild(card);
+    });
+  }
+
+
+  /* =====================================================
+     FORMULAIRE DE PLANIFICATION
+  ===================================================== */
+
+  function openEditor(plan = null) {
+
+    editingId = plan ? plan.id : null;
+
+    byId("nmcalEditorTitle").textContent =
+      plan
+        ? "Modifier la séance"
+        : "Programmer une séance";
+
+    byId("nmcalDate").value =
+      plan ? plan.date : selectedDate;
+
+    byId("nmcalTime").value =
+      plan ? (plan.time || "") : "";
+
+    byId("nmcalType").value =
+      plan ? plan.type : "chrono";
+
+    byId("nmcalName").value =
+      plan ? plan.name : "";
+
+    byId("nmcalNote").value =
+      plan ? (plan.note || "") : "";
+
+    byId("nmcalEditor").hidden = false;
+
+    byId("nmcalEditor").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+
+  function saveForm(event) {
+
+    event.preventDefault();
+
+    const date = byId("nmcalDate").value;
+    const time = byId("nmcalTime").value;
+    const type = byId("nmcalType").value;
+    const name = byId("nmcalName").value.trim();
+    const note = byId("nmcalNote").value.trim();
+
+    if (!date || !name) {
+
+      alert("Indique une date et un nom de séance.");
+
+      return;
+    }
+
+    const plans = getPlans();
+
+    if (editingId) {
+
+      const plan = plans.find(
+        item => item.id === editingId
+      );
+
+      if (!plan) {
+        alert("Planification introuvable.");
+        return;
+      }
+
+      plan.date = date;
+      plan.time = time;
+      plan.type = type;
+      plan.name = name;
+      plan.note = note;
+
+    } else {
+
+      plans.push({
+
+        id:
+          "plan-" +
+          Date.now() +
+          "-" +
+          Math.random().toString(36).slice(2),
+
+        date,
+        time,
+        type,
+        name,
+        note,
+
+        createdAt: new Date().toISOString()
+
+      });
+    }
+
+    if (!savePlans(plans)) {
+      return;
+    }
+
+    selectedDate = date;
+
+    const selected = dateFromKey(date);
+
+    displayedMonth = new Date(
+      selected.getFullYear(),
+      selected.getMonth(),
+      1
+    );
+
+    editingId = null;
+
+    byId("nmcalEditor").hidden = true;
+
+    renderCalendar();
+
+    byId("nmcalSelectedTitle").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+
+  /* =====================================================
+     INITIALISATION
+  ===================================================== */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const openButton = byId("openCalendarBtn");
+      const calendarScreen = byId("calendarScreen");
+
+      if (!openButton || !calendarScreen) {
+        console.warn(
+          "Calendrier Nexus Move : éléments HTML absents."
+        );
+        return;
+      }
+
+      openButton.addEventListener("click", () => {
+
+        document.querySelectorAll(".screen")
+          .forEach(screen => {
+            screen.classList.remove("active");
+          });
+
+        calendarScreen.classList.add("active");
+
+        selectedDate = localDateKey(new Date());
+
+        displayedMonth = new Date();
+        displayedMonth.setDate(1);
+
+        byId("nmcalEditor").hidden = true;
+
+        renderCalendar();
+
+        window.scrollTo(0, 0);
+      });
+
+
+      byId("nmcalPreviousMonth").addEventListener(
+        "click",
+        () => {
+
+          displayedMonth.setMonth(
+            displayedMonth.getMonth() - 1
+          );
+
+          renderCalendar();
+        }
+      );
+
+
+      byId("nmcalNextMonth").addEventListener(
+        "click",
+        () => {
+
+          displayedMonth.setMonth(
+            displayedMonth.getMonth() + 1
+          );
+
+          renderCalendar();
+        }
+      );
+
+
+      byId("nmcalAddBtn").addEventListener(
+        "click",
+        () => openEditor()
+      );
+
+
+      byId("nmcalCancelBtn").addEventListener(
+        "click",
+        () => {
+
+          editingId = null;
+
+          byId("nmcalEditor").hidden = true;
+        }
+      );
+
+
+      byId("nmcalForm").addEventListener(
+        "submit",
+        saveForm
+      );
+
+    }
+  );
+
+})();
+
+
+
+
+
+
+
+
+
+
