@@ -8420,7 +8420,9 @@ document.addEventListener(
       grid.appendChild(button);
     }
 
-    renderSelectedDay(plans, sessions);
+        renderSelectedDay(plans, sessions);
+
+    renderRecoveryPanel(sessions);
   }
 
 
