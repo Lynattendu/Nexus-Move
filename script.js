@@ -8546,6 +8546,9 @@ document.addEventListener(
         renderSelectedDay(plans, sessions);
 
     renderRecoveryPanel(sessions);
+    renderEnergyChart(sessions);
+
+     
   }
 
 
