@@ -3562,6 +3562,125 @@ if (
     );
 
 
+    /* =====================================================
+       SUPPRIMER UNE SEULE SÉANCE
+    ===================================================== */
+
+    const deleteSessionBtn =
+      document.createElement("button");
+
+    deleteSessionBtn.type = "button";
+
+    deleteSessionBtn.textContent =
+      "🗑️ Supprimer cette séance";
+
+    deleteSessionBtn.style.cssText = `
+      display:block;
+      width:100%;
+      margin-top:18px;
+      padding:13px 15px;
+      border:1px solid rgba(255,90,90,0.35);
+      border-radius:13px;
+      background:rgba(255,70,70,0.08);
+      color:#ff8585;
+      font-size:14px;
+      font-weight:bold;
+      cursor:pointer;
+    `;
+
+
+    deleteSessionBtn.addEventListener(
+      "click",
+      function () {
+
+        const confirmation = confirm(
+          "Supprimer définitivement cette séance ?\n\n" +
+          "Les autres entraînements seront conservés."
+        );
+
+        if (!confirmation) {
+          return;
+        }
+
+
+        /* RÉCUPÉRER L'HISTORIQUE ACTUEL */
+
+        const updatedHistory =
+          getHistory();
+
+
+        /* RETROUVER UNIQUEMENT CETTE SÉANCE */
+
+        const sessionIndex =
+          updatedHistory.findIndex(
+            item =>
+              item.id === session.id &&
+              item.date === session.date &&
+              item.type === session.type
+          );
+
+
+        if (sessionIndex === -1) {
+
+          alert(
+            "Cette séance est introuvable."
+          );
+
+          return;
+        }
+
+
+        /* SUPPRIMER UNE SEULE ENTRÉE */
+
+        updatedHistory.splice(
+          sessionIndex,
+          1
+        );
+
+
+        /* ENREGISTRER L'HISTORIQUE MODIFIÉ */
+
+        try {
+
+          saveHistory(
+            updatedHistory
+          );
+
+        } catch (error) {
+
+          alert(
+            "Impossible de supprimer cette séance."
+          );
+
+          return;
+        }
+
+
+        /* ACTUALISER LES STATISTIQUES */
+
+        updateHomeStats();
+
+
+        /* ACTUALISER L'HISTORIQUE */
+
+        renderHistory();
+
+
+        /* ACTUALISER LA PROGRESSION PAR EXERCICE */
+
+        renderExerciseProgression();
+
+      }
+    );
+
+
+    /* AJOUTER LE BOUTON À LA CARTE */
+
+    card.appendChild(
+      deleteSessionBtn
+    );
+
+
     /* AJOUTER LA SÉANCE À L'HISTORIQUE */
 
     list.appendChild(
