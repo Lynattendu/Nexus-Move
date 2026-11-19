@@ -1391,8 +1391,413 @@
 
     </section>
 
+<!-- CALENDRIER SPORTIF -->
+
+<button
+  class="home-card"
+  id="openCalendarBtn"
+  type="button"
+>
+  <span class="home-card-icon">📅</span>
+
+  <span class="home-card-content">
+    <strong>Calendrier sportif</strong>
+    <small>
+      Planification • Suivi automatique
+    </small>
+  </span>
+
+  <span class="home-card-arrow">›</span>
+</button>
+
+<!-- =====================================================
+     NEXUS MOVE — CALENDRIER SPORTIF
+===================================================== -->
+
+<section
+  class="screen"
+  id="calendarScreen"
+>
+
+  <header class="screen-header">
+
+    <button
+      class="back-btn"
+      data-back-home
+      type="button"
+    >
+      ‹
+    </button>
+
+    <div>
+      <span class="screen-kicker">
+        NEXUS MOVE
+      </span>
+
+      <h2>Calendrier sportif</h2>
+    </div>
+
+  </header>
 
 
+  <div class="nmcal-content">
+
+    <div class="nmcal-panel">
+
+      <div class="nmcal-navigation">
+
+        <button
+          id="nmcalPreviousMonth"
+          type="button"
+          aria-label="Mois précédent"
+        >
+          ‹
+        </button>
+
+        <h3 id="nmcalMonthTitle">
+          Calendrier
+        </h3>
+
+        <button
+          id="nmcalNextMonth"
+          type="button"
+          aria-label="Mois suivant"
+        >
+          ›
+        </button>
+
+      </div>
+
+      <div
+        class="nmcal-grid"
+        id="nmcalGrid"
+      ></div>
+
+      <div class="nmcal-legend">
+        <span>🟢 Réalisé</span>
+        <span>🔵 Prévu</span>
+        <span>🟠 À vérifier</span>
+      </div>
+
+    </div>
+
+
+    <div class="nmcal-panel">
+
+      <h3 id="nmcalSelectedTitle">
+        Ma journée
+      </h3>
+
+      <div id="nmcalDaySummary"></div>
+
+      <button
+        class="big-start-btn"
+        id="nmcalAddBtn"
+        type="button"
+      >
+        + PROGRAMMER UNE SÉANCE
+      </button>
+
+    </div>
+
+
+    <div
+      class="nmcal-panel"
+      id="nmcalEditor"
+      hidden
+    >
+
+      <h3 id="nmcalEditorTitle">
+        Programmer une séance
+      </h3>
+
+      <form id="nmcalForm">
+
+        <label for="nmcalDate">
+          Date
+        </label>
+
+        <input
+          type="date"
+          id="nmcalDate"
+          required
+        >
+
+        <label for="nmcalTime">
+          Heure (facultative)
+        </label>
+
+        <input
+          type="time"
+          id="nmcalTime"
+        >
+
+        <label for="nmcalType">
+          Type d'entraînement
+        </label>
+
+        <select id="nmcalType">
+
+          <option value="chrono">
+            Activité chronométrée
+          </option>
+
+          <option value="circuit">
+            Circuit / Renforcement
+          </option>
+
+          <option value="rest">
+            Repos / Récupération
+          </option>
+
+          <option value="other">
+            Autre activité
+          </option>
+
+        </select>
+
+        <label for="nmcalName">
+          Nom de la séance
+        </label>
+
+        <input
+          type="text"
+          id="nmcalName"
+          maxlength="80"
+          placeholder="Ex : Natation, Course, Musculation..."
+          required
+        >
+
+        <label for="nmcalNote">
+          Objectif ou remarque (facultatif)
+        </label>
+
+        <textarea
+          id="nmcalNote"
+          maxlength="300"
+          rows="3"
+          placeholder="Ex : 30 minutes, récupération douce..."
+        ></textarea>
+
+        <button
+          class="big-start-btn"
+          type="submit"
+        >
+          ENREGISTRER LA PLANIFICATION
+        </button>
+
+        <button
+          class="nmcal-secondary-btn"
+          id="nmcalCancelBtn"
+          type="button"
+        >
+          Annuler
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     STYLE DU CALENDRIER
+===================================================== -->
+
+<style>
+
+.nmcal-content {
+  padding: 18px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.nmcal-panel {
+  padding: 18px;
+  border-radius: 22px;
+  background: #102036;
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.nmcal-panel h3 {
+  margin: 0 0 16px;
+  color: #ffffff;
+}
+
+.nmcal-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.nmcal-navigation h3 {
+  margin: 0;
+  font-size: 19px;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.nmcal-navigation button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 13px;
+  background: #1a304d;
+  color: white;
+  font-size: 28px;
+}
+
+.nmcal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.nmcal-weekday {
+  padding: 8px 0;
+  text-align: center;
+  color: #9caec4;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.nmcal-day {
+  min-width: 0;
+  min-height: 55px;
+  padding: 6px 2px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 11px;
+  background: #18283e;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.nmcal-day.selected {
+  outline: 2px solid #22dce8;
+}
+
+.nmcal-day.today {
+  border-color: #22dce8;
+}
+
+.nmcal-day-indicators {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+
+.nmcal-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.nmcal-dot.done {
+  background: #39d98a;
+}
+
+.nmcal-dot.planned {
+  background: #3e9bff;
+}
+
+.nmcal-dot.review {
+  background: #ffa94d;
+}
+
+.nmcal-legend {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  color: #c5d4e6;
+  font-size: 12px;
+}
+
+.nmcal-entry {
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 15px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.nmcal-entry strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.nmcal-entry p {
+  margin: 6px 0;
+  color: #c5d4e6;
+  font-size: 14px;
+}
+
+.nmcal-entry small {
+  color: #9caec4;
+}
+
+.nmcal-entry-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.nmcal-entry-actions button,
+.nmcal-secondary-btn {
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: #1e3653;
+  color: white;
+  font-weight: bold;
+}
+
+#nmcalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#nmcalForm label {
+  color: #dce7f3;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#nmcalForm input,
+#nmcalForm select,
+#nmcalForm textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 13px;
+  background: #182b43;
+  color: white;
+  font: inherit;
+  color-scheme: dark;
+}
+
+#nmcalEditor[hidden] {
+  display: none !important;
+}
+
+</style>
+    
   <!-- =====================================================
      HISTORIQUE
 ===================================================== -->
