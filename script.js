@@ -8655,7 +8655,276 @@ document.addEventListener(
     });
   }
 
+/* =========================================================
+   CALENDRIER — ANALYSE FATIGUE ET RÉCUPÉRATION
+========================================================= */
 
+function renderRecoveryPanel(sessions) {
+
+  const workoutsElement =
+    byId("nmcalRecoveryWorkouts");
+
+  const durationElement =
+    byId("nmcalRecoveryDuration");
+
+  const energyElement =
+    byId("nmcalRecoveryEnergy");
+
+  const adviceElement =
+    byId("nmcalRecoveryAdvice");
+
+  const detailElement =
+    byId("nmcalRecoveryDetail");
+
+  if (
+    !workoutsElement ||
+    !durationElement ||
+    !energyElement ||
+    !adviceElement ||
+    !detailElement
+  ) {
+    return;
+  }
+
+
+  /* SEPT DERNIERS JOURS */
+
+  const today = new Date();
+
+  const start = new Date(today);
+
+  start.setDate(start.getDate() - 6);
+  start.setHours(0, 0, 0, 0);
+
+  const recentSessions = sessions
+
+    .filter(session => {
+
+      const date = new Date(session.date);
+
+      return (
+        date >= start &&
+        date <= today
+      );
+
+    })
+
+    .sort((a, b) =>
+      new Date(b.date) -
+      new Date(a.date)
+    );
+
+
+  /* TOTAL SÉANCES ET DURÉE */
+
+  const count = recentSessions.length;
+
+  const totalDuration = recentSessions.reduce(
+    (total, session) =>
+      total + Math.max(
+        0,
+        Number(session.duration) || 0
+      ),
+    0
+  );
+
+  workoutsElement.textContent = count;
+
+  durationElement.textContent =
+    formatTime(totalDuration);
+
+
+  /* RECHERCHE DES BILANS DE RESSENTI */
+
+  const feedbackSessions =
+    recentSessions.filter(session => {
+
+      return (
+        session.feedback &&
+        typeof session.feedback === "object"
+      );
+
+    });
+
+
+  const latestFeedbackSession =
+    feedbackSessions.length > 0
+      ? feedbackSessions[0]
+      : null;
+
+  const feedback =
+    latestFeedbackSession
+      ? latestFeedbackSession.feedback
+      : null;
+
+
+  /* ÉNERGIE LA PLUS RÉCENTE */
+
+  const energy =
+    feedback
+      ? Number(feedback.energy)
+      : 0;
+
+  const validEnergy =
+    Number.isInteger(energy) &&
+    energy >= 1 &&
+    energy <= 5;
+
+  energyElement.textContent =
+    validEnergy
+      ? energy + "/5"
+      : "—";
+
+
+  /* SIGNAL DE FATIGUE */
+
+  const difficult =
+    feedback &&
+    feedback.feeling === "Difficile";
+
+  const lowEnergy =
+    validEnergy &&
+    energy <= 2;
+
+  const hasPain =
+    feedback &&
+    feedback.pain &&
+    feedback.pain.hasPain === true;
+
+
+  /* CONSTRUIRE LES CONSEILS */
+
+  const messages = [];
+
+
+  if (hasPain) {
+
+    messages.push(
+      "⚠️ Une douleur a été signalée dans ton dernier bilan. Évite de forcer sur la zone concernée. Si elle persiste ou s'aggrave, demande un avis médical."
+    );
+
+  }
+
+
+  if (lowEnergy) {
+
+    messages.push(
+      "🔋 Ton dernier niveau d'énergie est bas. Une récupération supplémentaire ou une séance légère pourrait être préférable."
+    );
+
+  }
+
+
+  if (difficult && !lowEnergy) {
+
+    messages.push(
+      "💪 Ton dernier entraînement a été ressenti comme difficile. Pense à adapter l'intensité de la prochaine séance à tes sensations."
+    );
+
+  }
+
+
+  if (count >= 5) {
+
+    messages.push(
+      "📅 Tu as enregistré au moins cinq séances sur sept jours. Vérifie que tu disposes de suffisamment de récupération entre tes entraînements exigeants."
+    );
+
+  }
+
+
+  if (
+    count > 0 &&
+    feedbackSessions.length === 0
+  ) {
+
+    messages.push(
+      "📝 Tu as enregistré des séances, mais aucun bilan de ressenti récent. Compléter tes bilans permettra d'obtenir des conseils plus personnalisés."
+    );
+
+  }
+
+
+  if (count === 0) {
+
+    messages.push(
+      "🌱 Aucune séance enregistrée ces sept derniers jours. Le calendrier ne dispose pas encore d'informations récentes pour analyser ton activité."
+    );
+
+  }
+
+
+  if (messages.length === 0) {
+
+    messages.push(
+      "✅ Aucun signal particulier dans les données récentes. Continue à écouter tes sensations : le nombre de séances et le dernier bilan ne suffisent pas à mesurer complètement la récupération."
+    );
+
+  }
+
+
+  adviceElement.textContent =
+    messages.join("\n\n");
+
+
+  /* DÉTAIL DU DERNIER BILAN */
+
+  if (feedback && latestFeedbackSession) {
+
+    const date =
+      new Date(latestFeedbackSession.date)
+        .toLocaleDateString("fr-FR");
+
+    const feeling =
+      feedback.feeling || "Non renseigné";
+
+    let detail =
+      "Dernier bilan : " +
+      date +
+      " • Ressenti : " +
+      feeling;
+
+    if (validEnergy) {
+
+      detail +=
+        " • Énergie : " +
+        energy +
+        "/5";
+
+    }
+
+    if (hasPain) {
+
+      const locations =
+        Array.isArray(feedback.pain.locations)
+          ? feedback.pain.locations
+          : [];
+
+      if (locations.length > 0) {
+
+        detail +=
+          " • Douleur : " +
+          locations.join(", ");
+
+      } else {
+
+        detail +=
+          " • Douleur signalée";
+
+      }
+
+    }
+
+    detailElement.textContent = detail;
+
+  } else {
+
+    detailElement.textContent =
+      "Aucun bilan de ressenti disponible sur les sept derniers jours.";
+
+  }
+
+}
   /* =====================================================
      FORMULAIRE DE PLANIFICATION
   ===================================================== */
