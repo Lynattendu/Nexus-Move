@@ -9050,6 +9050,416 @@ function renderRecoveryPanel(sessions) {
   }
 
 }
+
+/* =========================================================
+   NEXUS MOVE — ÉVOLUTION DE L'ÉNERGIE
+========================================================= */
+
+function renderEnergyChart(sessions) {
+
+  const container =
+    byId("nmcalEnergyChart");
+
+  const analysis =
+    byId("nmcalEnergyAnalysis");
+
+  if (!container || !analysis) {
+    return;
+  }
+
+  container.innerHTML = "";
+  analysis.textContent = "";
+
+
+  /* =====================================================
+     RÉCUPÉRER LES BILANS AVEC UNE NOTE D'ÉNERGIE
+  ===================================================== */
+
+  const data = sessions
+
+    .filter(session => {
+
+      const energy =
+        Number(
+          session.feedback?.energy
+        );
+
+      return (
+        session.feedback &&
+        Number.isInteger(energy) &&
+        energy >= 1 &&
+        energy <= 5 &&
+        session.date &&
+        !Number.isNaN(
+          new Date(session.date).getTime()
+        )
+      );
+
+    })
+
+    .sort((a, b) =>
+      new Date(a.date) -
+      new Date(b.date)
+    )
+
+    .slice(-8)
+
+    .map(session => ({
+
+      date: new Date(session.date),
+
+      energy:
+        Number(session.feedback.energy)
+
+    }));
+
+
+  /* =====================================================
+     AUCUN BILAN
+  ===================================================== */
+
+  if (data.length === 0) {
+
+    const message =
+      document.createElement("p");
+
+    message.textContent =
+      "Aucune note d'énergie enregistrée pour le moment.";
+
+    container.appendChild(message);
+
+    analysis.textContent =
+      "Après tes prochains entraînements, indique ton énergie de 1 à 5. La courbe se construira automatiquement.";
+
+    return;
+  }
+
+
+  /* =====================================================
+     CRÉER LE GRAPHIQUE SVG
+  ===================================================== */
+
+  const ns =
+    "http://www.w3.org/2000/svg";
+
+  const svg =
+    document.createElementNS(ns, "svg");
+
+  svg.setAttribute(
+    "viewBox",
+    "0 0 340 210"
+  );
+
+  svg.setAttribute(
+    "role",
+    "img"
+  );
+
+  svg.setAttribute(
+    "aria-label",
+    "Évolution des notes d'énergie après entraînement"
+  );
+
+
+  function svgElement(tag, attributes = {}) {
+
+    const element =
+      document.createElementNS(ns, tag);
+
+    Object.entries(attributes).forEach(
+      ([name, value]) => {
+
+        element.setAttribute(
+          name,
+          String(value)
+        );
+
+      }
+    );
+
+    return element;
+  }
+
+
+  function svgText(
+    value,
+    x,
+    y,
+    options = {}
+  ) {
+
+    const element = svgElement(
+      "text",
+      {
+        x: x,
+        y: y,
+        fill: options.color || "#a9bfd2",
+        "font-size": options.size || 11,
+        "text-anchor": options.anchor || "middle"
+      }
+    );
+
+    element.textContent = value;
+
+    return element;
+  }
+
+
+  /* =====================================================
+     DIMENSIONS
+  ===================================================== */
+
+  const left = 38;
+  const right = 315;
+
+  const top = 25;
+  const bottom = 165;
+
+
+  /* =====================================================
+     LIGNES DE RÉFÉRENCE 1 À 5
+  ===================================================== */
+
+  for (let energy = 1; energy <= 5; energy++) {
+
+    const y =
+      bottom -
+      ((energy - 1) / 4) *
+      (bottom - top);
+
+    const line = svgElement(
+      "line",
+      {
+        x1: left,
+        y1: y,
+        x2: right,
+        y2: y,
+        stroke: "rgba(160,185,210,0.18)",
+        "stroke-width": 1
+      }
+    );
+
+    svg.appendChild(line);
+
+    svg.appendChild(
+      svgText(
+        String(energy),
+        19,
+        y + 4
+      )
+    );
+
+  }
+
+
+  /* =====================================================
+     POSITION DES POINTS
+  ===================================================== */
+
+  const points = data.map(
+    (item, index) => {
+
+      const x =
+        data.length === 1
+          ? (left + right) / 2
+          : left +
+            (
+              index /
+              (data.length - 1)
+            ) *
+            (right - left);
+
+      const y =
+        bottom -
+        (
+          (item.energy - 1) / 4
+        ) *
+        (bottom - top);
+
+      return {
+        x,
+        y,
+        ...item
+      };
+
+    }
+  );
+
+
+  /* =====================================================
+     TRACER LA COURBE
+  ===================================================== */
+
+  if (points.length >= 2) {
+
+    const polyline = svgElement(
+      "polyline",
+      {
+        points:
+          points.map(point =>
+            point.x + "," + point.y
+          ).join(" "),
+
+        fill: "none",
+
+        stroke: "#22dce8",
+
+        "stroke-width": 3,
+
+        "stroke-linejoin": "round",
+
+        "stroke-linecap": "round"
+      }
+    );
+
+    svg.appendChild(polyline);
+
+  }
+
+
+  /* =====================================================
+     POINTS ET DATES
+  ===================================================== */
+
+  points.forEach(point => {
+
+    const circle = svgElement(
+      "circle",
+      {
+        cx: point.x,
+        cy: point.y,
+        r: 5,
+        fill: "#102036",
+        stroke: "#22dce8",
+        "stroke-width": 3
+      }
+    );
+
+
+    const tooltip = svgElement("title");
+
+    tooltip.textContent =
+      point.date.toLocaleDateString("fr-FR") +
+      " — Énergie : " +
+      point.energy +
+      "/5";
+
+    circle.appendChild(tooltip);
+
+    svg.appendChild(circle);
+
+
+    svg.appendChild(
+      svgText(
+        String(point.energy),
+        point.x,
+        point.y - 13,
+        {
+          color: "#ffffff",
+          size: 12
+        }
+      )
+    );
+
+
+    const dateText =
+      point.date.toLocaleDateString(
+        "fr-FR",
+        {
+          day: "2-digit",
+          month: "2-digit"
+        }
+      );
+
+    svg.appendChild(
+      svgText(
+        dateText,
+        point.x,
+        190,
+        {
+          size: 10
+        }
+      )
+    );
+
+  });
+
+
+  container.appendChild(svg);
+
+
+  /* =====================================================
+     ANALYSE DES NOTES
+  ===================================================== */
+
+  if (data.length === 1) {
+
+    analysis.textContent =
+      "Première note d'énergie enregistrée : " +
+      data[0].energy +
+      "/5. Il faudra d'autres bilans pour observer une évolution.";
+
+    return;
+  }
+
+
+  const first =
+    data[0].energy;
+
+  const latest =
+    data[data.length - 1].energy;
+
+  const difference =
+    latest - first;
+
+
+  const average =
+    data.reduce(
+      (total, item) =>
+        total + item.energy,
+      0
+    ) / data.length;
+
+
+  let message = "";
+
+
+  if (difference >= 1) {
+
+    message =
+      "📈 Ton énergie déclarée est plus élevée qu'au premier bilan affiché.";
+
+  } else if (difference <= -1) {
+
+    message =
+      "📉 Ton énergie déclarée est plus basse qu'au premier bilan affiché. Observe tes sensations et la difficulté de tes entraînements.";
+
+  } else {
+
+    message =
+      "➡️ Ta dernière note d'énergie est identique à la première note affichée.";
+
+  }
+
+
+  analysis.textContent =
+    message +
+    "\n\n" +
+    "Moyenne sur " +
+    data.length +
+    " bilans : " +
+    average.toFixed(1).replace(".", ",") +
+    "/5." +
+    "\n" +
+    "Dernier bilan : " +
+    latest +
+    "/5." +
+    "\n\n" +
+    "Ces notes reflètent ton ressenti déclaré et ne constituent pas une mesure médicale de récupération.";
+
+}
+
+   
   /* =====================================================
      FORMULAIRE DE PLANIFICATION
   ===================================================== */
