@@ -746,13 +746,17 @@ if (
 
 
   updateHomeStats();
+
+  /* OUVRIR LE BILAN APRÈS LE CHRONOMÈTRE */
+
+  openWorkoutFeedback();
+
 });
 
 
 /* =========================================================
    CIRCUIT
 ========================================================= */
-
 let exercises = [];
 
 let selectedType =
