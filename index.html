@@ -1651,6 +1651,10 @@
 <!-- =====================================================
      STYLE DU CALENDRIER
 ===================================================== -->
+/* =====================================================
+   FATIGUE ET RÉCUPÉRATION
+===================================================== */
+
 
 <style>
 
@@ -1841,6 +1845,59 @@
   display: none !important;
 }
 
+.nmcal-recovery-subtitle {
+  color: #9caec4;
+  margin: -5px 0 18px;
+  font-size: 13px;
+}
+
+.nmcal-recovery-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.nmcal-recovery-stats > div {
+  min-width: 0;
+  padding: 15px 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.nmcal-recovery-stats strong {
+  display: block;
+  color: #22dce8;
+  font-size: 21px;
+  margin-bottom: 7px;
+}
+
+.nmcal-recovery-stats span {
+  display: block;
+  color: #c5d4e6;
+  font-size: 11px;
+}
+
+.nmcal-recovery-advice {
+  background: rgba(34,220,232,0.07);
+  border: 1px solid rgba(34,220,232,0.2);
+  border-radius: 15px;
+  padding: 16px;
+  color: #e4f2f6;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.nmcal-recovery-detail {
+  margin: 14px 0 0;
+  color: #9caec4;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+  
 </style>
     
   <!-- =====================================================
